@@ -17,7 +17,7 @@ public class App {
         
         System.out.println("Bienvenue sur Clinique Konsoru !");
         
-        // chargement de la configuration de la persistence
+        // chargement de la configuration de la persistence bonjour bonjour
         ConfigLoader cf = new ConfigLoader();
         Properties properties = cf.getProperties();
         System.out.println("Mode de persistence : "
