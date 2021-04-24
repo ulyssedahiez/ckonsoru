@@ -7,14 +7,21 @@ package com.fges.ckonsoru;
 
 import java.util.Properties;
 
+
+
+
 /**
  * Launch the App
  * @author julie.jacques
  */
 public class App {
-    
+
     public static void main(String args[]){
         
+        Client monCli  = new Client("Durant","Paul");
+        monCli.info();
+        monCli.showVet();
+
         System.out.println("Bienvenue sur Clinique Konsoru !");
         
         // chargement de la configuration de la persistence bonjour bonjour
