@@ -25,32 +25,13 @@ import java.util.Calendar;
  * @author julie.jacques
  */
 public class App {
-<<<<<<< HEAD
 	//Date aujourdhui = SystemClockFactory.getDatetime();
 	
     public static void main(String args[]){
-=======
-	
-	
-
-    public static void main(String args[]) throws ParseException{
->>>>>>> main
         
         Client monCli  = new Client(1,"Durant","Paul");
         monCli.info();
-<<<<<<< HEAD
         monCli.showVet();
-=======
-        
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime debut = LocalDateTime.parse("05/05/2018 11:50", timeFormatter);
-        
-        System.out.println("Disponibilités pour le " + debut.format(timeFormatter));
-
-        
-      // Semaine maSem = new Semaine()
-      
->>>>>>> main
         
         System.out.println("Bienvenue sur Clinique Konsoru !");
         
