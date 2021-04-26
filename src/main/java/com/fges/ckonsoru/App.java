@@ -5,9 +5,19 @@
  */
 package com.fges.ckonsoru;
 
+
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 import java.sql.Date;
 import java.util.Calendar;
+
+
 
 
 /**
@@ -15,13 +25,32 @@ import java.util.Calendar;
  * @author julie.jacques
  */
 public class App {
+<<<<<<< HEAD
 	//Date aujourdhui = SystemClockFactory.getDatetime();
 	
     public static void main(String args[]){
+=======
+	
+	
+
+    public static void main(String args[]) throws ParseException{
+>>>>>>> main
         
-        Client monCli  = new Client("Durant","Paul");
+        Client monCli  = new Client(1,"Durant","Paul");
         monCli.info();
+<<<<<<< HEAD
         monCli.showVet();
+=======
+        
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDateTime debut = LocalDateTime.parse("05/05/2018 11:50", timeFormatter);
+        
+        System.out.println("Disponibilités pour le " + debut.format(timeFormatter));
+
+        
+      // Semaine maSem = new Semaine()
+      
+>>>>>>> main
         
         System.out.println("Bienvenue sur Clinique Konsoru !");
         

@@ -1,19 +1,35 @@
 package com.fges.ckonsoru;
 
+import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+<<<<<<< HEAD
+=======
+import java.sql.PreparedStatement;
+>>>>>>> main
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
 
+
 public class Client {
     public int id;
     public String nom;
     public String prenom;
+    
+    public ConfigLoader maConf = new ConfigLoader();
+    public Properties prop = maConf.getProperties();
+	
+    public String url = prop.getProperty("bdd.url");
+    public String login = prop.getProperty("bdd.login");
+    public String mdp = prop.getProperty("bdd.mdp");
+    
+    
 
-    public Client(String name ,String firstname ){
+    public Client(int id ,String name ,String firstname ){
+    	this.id =  id;
         this.nom = name;
         this.prenom = firstname;
         
@@ -23,12 +39,10 @@ public class Client {
     public void info(){
         System.out.println( "Nom : "+ this.nom + " ,Prenom :" + this.prenom);
     }
-    /*bdd.url=jdbc:postgresql://localhost/ckonsoru
-    bdd.login=postgres
-    bdd.mdp=$im1789Jps*/
 
 
 
+<<<<<<< HEAD
     public void showVet(){
        
         Connection conn1 = null;
@@ -59,11 +73,22 @@ public class Client {
             
             conn1.close();
             
+=======
+
+    /*public void showVet(){
+        Connection conn1 = null;        
+        try{
+        	
+            conn1 = DriverManager.getConnection(url , login,mdp);
+            System.out.println("Connected to database #1");    
+            conn1.close();       
+>>>>>>> main
         }catch(SQLException e){
             System.out.println("Sa merde gros #1");
             e.printStackTrace();
 
         }
+<<<<<<< HEAD
         
        
         
@@ -76,6 +101,9 @@ public class Client {
         
 
     }
+=======
+    }*/
+>>>>>>> main
 
 
 
