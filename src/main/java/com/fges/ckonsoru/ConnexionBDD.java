@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -143,6 +144,7 @@ public class ConnexionBDD {
 		
 		
 		
+		
 	}
 	
 	
@@ -189,6 +191,55 @@ public class ConnexionBDD {
 
         }
 	}
+	 @SuppressWarnings("deprecation")
+	public void afficherDispo(LocalDateTime dateDispo) {
+		 Connection conn1 = null;   
+			
+			ArrayList listDispoJour = new ArrayList(); 
+			
+			Timestamp heureDebut = null;
+			Timestamp heureFin = null;
+			
+			try {
+				conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);	
+		        String requeteDisJour = "SELECT * FROM disponibilite WHERE disponibilite.vet_id = ?";;
+		        PreparedStatement prepStatDisJour = conn1.prepareStatement(requeteDisJour);
+		        prepStatDisJour.setInt(1, 1);
+		        ResultSet resultatDisJour = prepStatDisJour.executeQuery();
+		        
+		        while (resultatDisJour.next()) {
+		        	
+		        	 heureDebut = resultatDisJour.getTimestamp("dis_debut");
+		        	 heureFin = resultatDisJour.getTimestamp("dis_fin");	
+		       
+		        	
+		        	
+		        	System.out.println(heureDebut);
+		        	
+		        	
+		        }
+		        
+		        while(heureDebut.compareTo(heureFin) != 0) {
+		        	
+		        	long t=heureDebut.getTime();
+		        	long m= 20*60*1000;
+		        	listDispoJour.add(heureDebut);
+
+		        	heureDebut = new Timestamp(t+m);
+		        	
+		        	
+		        }
+		        
+		        
+		        System.out.println(listDispoJour);
+				
+				conn1.close();
+			}catch(SQLException e) {
+				 System.out.println("Connexion echoué #1");
+		            e.printStackTrace();
+				
+			}
+	 }
 	 
 }
 

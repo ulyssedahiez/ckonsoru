@@ -47,7 +47,7 @@ public class App {
         
         //<DATE ESSAI 
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime debut = LocalDateTime.parse("05/05/2018 11:50", timeFormatter);
+        LocalDateTime debut = LocalDateTime.parse("18/03/2021 11:50", timeFormatter);
         
         
         
@@ -101,7 +101,8 @@ public class App {
         
         //test.lesdispo("2021-02-18");
         //test.rdvClientAfficher("M. Byrnison");
-        test.rdvDispo("2021-02-18");
+        //test.rdvDispo("2021-02-18");
+        test.afficherDispo(debut);
         
     }
     
