@@ -1,5 +1,6 @@
 package com.fges.ckonsoru;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -101,16 +103,21 @@ public class ConnexionBDD {
 		        	
 		        }
 		        listDispoJour.add(vet_nom);
-		        while(heureDebut.compareTo(heureFin) != 0) {
+				if(heureDebut != null){
+					while(heureDebut.compareTo(heureFin) != 0) {
 		        	
-		        	long t=heureDebut.getTime();
-		        	long m= 20*60*1000;
-		        	listDispoJour.add(heureDebut);
-
-		        	heureDebut = new Timestamp(t+m);
-		        	
-		        	
-		        }
+						long t=heureDebut.getTime();
+						long m= 20*60*1000;
+						listDispoJour.add(heureDebut);
+	
+						heureDebut = new Timestamp(t+m);
+						
+						
+					}
+				}else{
+					return  listDispoJour;
+				}
+		        
 		        
 		        
 				conn1.close();
@@ -120,30 +127,17 @@ public class ConnexionBDD {
 		            e.printStackTrace();
 				
 			}
-			System.out.println(listDispoJour);
+			//System.out.println(listDispoJour);
 			return  listDispoJour;
 	 }
 
 
 
 	 public ArrayList<Object> comparaisonDate(LocalDateTime dateDispo ,ArrayList<Object> listDispoJour ){
-		
-		/*DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime dateReformater = LocalDateTime.parse("18/03/2021 11:50", timeFormatter);*/
-		//System.out.println(dateDispo.toString().substring(0,10));
-		//System.out.println(dateDispo.toString().substring(0,4)+"-"+dateDispo.toString().substring(5,7)+"-"+);     
-		
-		/*dateDispo.toString().substring(4)
-		"1970-01-01 14:00:00.0"*/
 
 		Connection conn1 = null;   
-
 		ArrayList<Object> listRes = new ArrayList<Object>();
-
-
-		ArrayList<Object> listReturn= new ArrayList<Object>();
 		
-
 		listRes.add(listDispoJour.get(0));
 		try {
 			conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);	
@@ -164,47 +158,39 @@ public class ConnexionBDD {
 			conn1.close();
 			int i = 0;
 			ArrayList<Integer> listIndex = new ArrayList<Integer>();
-			for (Object elementDispoJour : listDispoJour) {
-				String dateEntiere = elementDispoJour.toString();
-				String[] heures = dateEntiere.split(" ");
-				
-				for( Object elementRes : listRes){
-					String dateRes = elementRes.toString();
-					String[] heuresRes = dateRes.split(" ");
-					if(heures[1].equals(heuresRes[1])){
-						System.out.println( "Mon heure 1 :" + heures[1] + " | Mon heure Res " + heuresRes[1]);
-						listIndex.add(i);
-							
-					}
-			}
+			if(listDispoJour.size() > 1){
+				for (Object elementDispoJour : listDispoJour) {
+					String dateEntiere = elementDispoJour.toString();
+					String[] heures = dateEntiere.split(" ");
+					
+					for( Object elementRes : listRes){
+						String dateRes = elementRes.toString();
+						String[] heuresRes = dateRes.split(" ");
+						if(heures[1].equals(heuresRes[1])){
+							//System.out.println( "Mon heure 1 :" + heures[1] + " | Mon heure Res " + heuresRes[1]);
+							listIndex.add(i);
+								
+						}
+				}
+	
+					i++;
+				}
 
-				i++;
+				for (int j = listIndex.size()-1; j > 0; j--) {
+					//System.out.println(listIndex.get(j));
+					listDispoJour.remove(listIndex.get(j).intValue());	
+				}
+
+
 			}
+			
 
 		
-		
-			for (int j = listIndex.size()-1; j > 0; j--) {
-				System.out.println(listIndex.get(j));
-				listDispoJour.remove(listIndex.get(j).intValue());	
-			}
+	
 
-
-			System.out.println(listDispoJour);
+			//System.out.println(listDispoJour);
 			return listDispoJour;
 		
-			
-/*08:00:00.0
-08:20:00.0
-08:40:00.0
-09:00:00.0
-09:20:00.0
-09:40:00.0
-10:00:00.0
-10:20:00.0
-10:40:00.0
-11:00:00.0
-11:20:00.0
-11:40:00.0*/
 			
 		}catch(SQLException e) {
 			 System.out.println("Connexion echoué #1");
@@ -213,7 +199,53 @@ public class ConnexionBDD {
 		}
 
 		return  listDispoJour;
-	 }
+	}
+
+
+	public ArrayList<Object> dispoAllVet(LocalDateTime dateDispo) {
+		Connection conn1 = null;
+		ArrayList<Integer> listId = new ArrayList<Integer>();
+		ArrayList<Object> listReturn =  new ArrayList<Object>();
+		try {
+			conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);	
+			String requeteDisJour = "SELECT * FROM veterinaire";
+			Statement statement = conn1.createStatement();
+            ResultSet resultat = statement.executeQuery(requeteDisJour);
+
+			while (resultat.next()) {
+				int vet_id = resultat.getInt("vet_id");
+				listId.add(vet_id);
+			}
+			conn1.close();
+			
+			for (Integer id : listId) {
+				listReturn.add(this.comparaisonDate(dateDispo, this.afficherDispo(dateDispo, id)));
+				
+			}
+
+			
+		}catch(SQLException e) {
+			 System.out.println("Connexion echoué #1");
+				e.printStackTrace();
+			
+		}
+		//System.out.println("La grande list est : " +listReturn);
+		return  listReturn;
+	}
+
+
+
+
+	/*public void AffichageDispoCorrect(ArrayList<Object> listAllVetDispo){
+		for (Object list : listAllVetDispo) {
+			//System.out.println("ma list est :" + list);
+			//ObjectGraphMeasurer.measure(list)
+			//String[] stringValues = (String[])list[0];
+		
+			
+			
+		}
+	}*/
 	 
 }
 
