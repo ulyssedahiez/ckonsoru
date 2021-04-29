@@ -166,6 +166,10 @@ public class App {
                     String explicationSupprimerRdv = "Affichage des rendez-vous d un client \n" + "Indiquer le nom du client";
                     System.out.println(explicationSupprimerRdv);
                     
+
+                    String essai = "27/05/2021 08:20";
+                    test.supprRdv(essai,"B. Costa");
+                    
                     System.out.println(choix);
                     System.out.println("Entrer un numéro d action:");
                     numero = scanIn.nextInt();

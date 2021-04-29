@@ -341,7 +341,7 @@ public class ConnexionBDD {
 			pStmt.setString(3,nomClient);
 			int rows =  pStmt.executeUpdate();
 			if( rows > 0) {
-				System.out.println("A new vet has been insert ");
+				System.out.println("Un rendez-vous pour " + nomClient +  " avec " + nomVet + " a été réservé le " +  dateRdv);
 				}
 
 		}catch(SQLException e){
@@ -357,6 +357,48 @@ public class ConnexionBDD {
 			// look the origin of excption 
 		}
 		
+	}
+
+
+
+	public void supprRdv(String dateRdv , String nomClient){
+		Connection conn1 = null;
+
+		try {
+			String reform = dateRdv.substring(6,10) + "-" +  dateRdv.substring(0,2) + "-" + dateRdv.substring(3,5) + " "  + dateRdv.substring(11,16)+":00" ;
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Date parsedDate = dateFormat.parse(reform);
+			Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+			
+		try{
+			conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);
+
+
+			String requeteDeleteRdv = "DELETE FROM rendezvous WHERE rv_debut = ? AND rv_client = ?";
+			PreparedStatement pStmt = conn1.prepareStatement(requeteDeleteRdv);
+			pStmt.setTimestamp(1, timestamp);
+			pStmt.setString(2, nomClient);
+			
+			int rows =  pStmt.executeUpdate();
+			if( rows > 0) {
+				System.out.println("Un rendez-vous pour " + nomClient +  " pour le " +  dateRdv + " à été supprimé ");
+				}
+
+		}catch(SQLException e){
+			System.out.println("Connexion echoué #1");
+			e.printStackTrace();
+
+		}
+
+
+
+
+		} catch(Exception e) { //this generic but you can control another types of exception
+			// look the origin of excption 
+		}
+
+
+
 	}
 
 
