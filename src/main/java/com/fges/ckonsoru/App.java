@@ -163,12 +163,20 @@ public class App {
                     numero = scanIn.nextInt();
                 break;
                 case 4:
-                    String explicationSupprimerRdv = "Affichage des rendez-vous d un client \n" + "Indiquer le nom du client";
+                    String explicationSupprimerRdv = "Indiquer une date et heure de début au format JJ/MM/AAAA HH:MM (ex: 18/03/2021 15:00)";
                     System.out.println(explicationSupprimerRdv);
                     
+                    Scanner scanDateCliSupprRDV = new Scanner(System.in);
+                    String DateRdvsupp = scanDateCliSupprRDV.nextLine();
 
-                    String essai = "27/05/2021 08:20";
-                    test.supprRdv(essai,"B. Costa");
+                    System.out.println("Indiquer le nom du client");
+                    Scanner scanNomCliSupprRDV = new Scanner(System.in);
+                    String nomCliRdvsupp = scanNomCliSupprRDV.nextLine();
+
+
+                    //String essai = "27/05/2021 08:20";
+                    
+                    test.supprRdv(DateRdvsupp ,nomCliRdvsupp );
                     
                     System.out.println(choix);
                     System.out.println("Entrer un numéro d action:");
