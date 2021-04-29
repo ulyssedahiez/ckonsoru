@@ -236,17 +236,75 @@ public class ConnexionBDD {
 
 
 
-	/*public void AffichageDispoCorrect(ArrayList<Object> listAllVetDispo){
-		for (Object list : listAllVetDispo) {
-			//System.out.println("ma list est :" + list);
-			//ObjectGraphMeasurer.measure(list)
-			//String[] stringValues = (String[])list[0];
+	public void AffichageDispoCorrect(ArrayList<Object> listAllVetDispo , LocalDateTime dateJour){
+			
+			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        	LocalDateTime dateBonFormat = LocalDateTime.parse("18/02/2021 11:50", timeFormatter);
+			String essai = dateJour.toString().substring(0,10);
+			essai = essai.substring(8,10)  + "/"+  essai.substring(5,7) + "/" + essai.substring(0,4) ;
+			//System.out.println(essai);
+			//2021-02-18
+			ArrayList<String> st = new  ArrayList<String>();
+
+			for (Object monObLi : listAllVetDispo) {
+				String maStOb = monObLi.toString();
+				maStOb = maStOb.substring(1, maStOb.length()-1);
+				String[] decoupe = maStOb.split(",");
+				for (String stringfinal : decoupe) {
+					st.add(stringfinal);
+				}
+			}
+
+			ArrayList<String> noms = new  ArrayList<String>();
+			ArrayList<Integer> indexNom = new  ArrayList<Integer>();
+			ArrayList<String> dates =  new  ArrayList<String>();
+
+			int i = 0;
+			for (String res : st) {
+				if(res != null){
+					if(res.contains("1970-01-01")){
+						dates.add(res.substring(12,res.length()-2));
+						i++;
+					}else{
+						if(res != ""){
+							noms.add(res);
+							indexNom.add(i);
+							i++;
+						}
+						
+					}
+				}
+				
+				
+			}
+
+			for (int j = 0; j < indexNom.size(); j++) {
+				if(indexNom.get(j) != indexNom.get(indexNom.size()-1)){
+					for (int k = 0; k < indexNom.get(j+1); k++){
+						System.out.println(
+						noms.get(j) + " : " + essai + " " + dates.get(k)
+
+						);
+						
+					}
+				}else{
+					for (int l = indexNom.get(j).intValue(); l < dates.size()-1; l++){
+					System.out.println(
+						noms.get(indexNom.size()-1) + " : " + essai + " " + dates.get(l)
+
+						);
+					}
+
+				}
+				
+			}
+
+
+
+
 		
-			
-			
-		}
-	}*/
-	 
+	}
+
 }
 
 
