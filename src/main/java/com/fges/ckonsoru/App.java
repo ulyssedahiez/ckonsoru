@@ -102,7 +102,8 @@ public class App {
         //test.lesdispo("2021-02-18");
         //test.rdvClientAfficher("M. Byrnison");
         //test.rdvDispo("2021-02-18");
-        test.afficherDispo(debut);
+        //test.afficherDispo(debut,2);  
+        test.comparaisonDate(debut, test.afficherDispo(debut,2));
         
     }
     

@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -29,129 +30,6 @@ public class ConnexionBDD {
     LocalDateTime debut = LocalDateTime.parse("05/05/2018 11:50", timeFormatter);
     
     
-
-	
-	public void lesdispo(String dateJour) {
-		Connection conn1 = null;        
-        /*DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime debut = LocalDateTime.parse("05/05/2018 11:50", timeFormatter);
-        System.out.println(debut.getDayOfWeek().getValue());*/
-		
-		
-		String str = dateJour+" 11:30";
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
-            
-		
-		
-		
-		try{
-            conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);
-            System.out.println("Connected to database #1");   								
-            
-           
-        
-            String sql = "SELECT * FROM disponibilite INNER JOIN rendezvous ON disponibilite.vet_id = rendezvous.vet_id INNER JOIN veterinaire ON disponibilite.vet_id = veterinaire.vet_id WHERE DATE(rv_debut) = ?";
-            PreparedStatement monPrepStat = conn1.prepareStatement(sql);
-            monPrepStat.setDate(1, java.sql.Date.valueOf(dateJour));
-            ResultSet resultat = monPrepStat.executeQuery();
-            
-            
-  
-            if(!resultat.isBeforeFirst()) {
-            	//System.out.println(dateTime.getDayOfWeek().getValue());
-            	String dispoJour = "SELECT * FROM disponibilite LEFT JOIN veterinaire ON disponibilite.vet_id = veterinaire.vet_id WHERE dis_jour = ?";
-            	PreparedStatement monPrepStatDispoJour = conn1.prepareStatement(dispoJour);
-            	monPrepStatDispoJour.setInt(1, dateTime.getDayOfWeek().getValue());
-                ResultSet resultatDispoJour = monPrepStatDispoJour.executeQuery();
-                
-                //System.out.println(resultatDispoJour);
-                
-                
-                
-                
-                while (resultatDispoJour.next()) {
-                	String nomVetDj = resultatDispoJour.getString("vet_nom");
-                	Timestamp heureDebutDj = resultatDispoJour.getTimestamp("dis_debut");
-                	Timestamp heureFinDj = resultatDispoJour.getTimestamp("dis_fin");
-                	System.out.println(" Nom vet ->" + nomVetDj  + " : " +
-	            	" De HeureDebut  :" +  heureDebutDj  + " à  "  +  heureFinDj  + "\n" );
-	            }
-            	
-                conn1.close(); 
-            }else{
-            
-	            while (resultat.next()) {
-	            	String nomVet = resultat.getString("vet_nom");
-	            	Timestamp heureDebut = resultat.getTimestamp("dis_debut");
-	            	Timestamp heureFin = resultat.getTimestamp("dis_fin");
-	            	Timestamp rv_debut = resultat.getTimestamp("rv_debut");
-	            	System.out.println(" Nom vet ->" + nomVet  + " : " +
-	            	" De HeureDebut  :" +  heureDebut  + " à  "  +  heureFin  + "\n" +
-	            			"rdv debut :" + rv_debut );	
-	            }
-            }
-	              
-	        conn1.close();       
-        }catch(SQLException e){
-            System.out.println("Connexion echoué #1");
-            e.printStackTrace();
-
-        }
-
-		
-		
-	}
-	
-	
-	
-
-	public void rdvDispo(String dateJour) {
-		Connection conn1 = null;   
-		String str = dateJour+" 11:30";
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
-		int nbJourSemaine = dateTime.getDayOfWeek().getValue();
-		
-		String[] heureDebutTab; 
-		String[] heureFinTab; 
-		
-		try {
-			conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);	
-	        String requeteDisJour = "SELECT * FROM disponibilite LEFT JOIN veterinaire ON disponibilite.vet_id = veterinaire.vet_id WHERE dis_jour = ?";
-	        PreparedStatement prepStatDisJour = conn1.prepareStatement(requeteDisJour);
-	        prepStatDisJour.setInt(1,nbJourSemaine);
-	        ResultSet resultatDisJour = prepStatDisJour.executeQuery();
-	        
-	        while (resultatDisJour.next()) {
-	        	String nomVet = resultatDisJour.getString("vet_nom");
-	        	Timestamp heureDebut = resultatDisJour.getTimestamp("dis_debut");
-	        	Timestamp heureFin = resultatDisJour.getTimestamp("dis_fin");	
-	       
-	        	System.out.println(nomVet + " : " + heureDebut.toString().substring(11,16) + " to "
-	        	+ heureFin.toString().substring(11,16) );
-	        }
-			
-			conn1.close();
-		}catch(SQLException e) {
-			 System.out.println("Connexion echoué #1");
-	            e.printStackTrace();
-			
-		}
-		
-		
-		
-		
-		
-		
-		
-	}
-	
-	
-	
-	
-	
-	
 	
 	
 	public  void rdvClientAfficher(String nomClient) {
@@ -191,34 +69,38 @@ public class ConnexionBDD {
 
         }
 	}
-	 @SuppressWarnings("deprecation")
-	public void afficherDispo(LocalDateTime dateDispo) {
+
+
+
+	@SuppressWarnings("deprecation")
+	public ArrayList<Object> afficherDispo(LocalDateTime dateDispo , int vet_id) {
 		 Connection conn1 = null;   
 			
-			ArrayList listDispoJour = new ArrayList(); 
+			ArrayList<Object> listDispoJour = new ArrayList<Object>(); 
 			
+			String vet_nom = "";
 			Timestamp heureDebut = null;
 			Timestamp heureFin = null;
+			DayOfWeek dayofweek = dateDispo.getDayOfWeek();
 			
 			try {
 				conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);	
-		        String requeteDisJour = "SELECT * FROM disponibilite WHERE disponibilite.vet_id = ?";;
+		        String requeteDisJour = "SELECT * FROM disponibilite  LEFT JOIN veterinaire ON  disponibilite.vet_id = veterinaire.vet_id WHERE disponibilite.vet_id = ? AND dis_jour = ?";;
 		        PreparedStatement prepStatDisJour = conn1.prepareStatement(requeteDisJour);
-		        prepStatDisJour.setInt(1, 1);
+		        prepStatDisJour.setInt(1, vet_id);
+				prepStatDisJour.setInt(2, dayofweek.getValue());
 		        ResultSet resultatDisJour = prepStatDisJour.executeQuery();
 		        
 		        while (resultatDisJour.next()) {
-		        	
+					 vet_nom = resultatDisJour.getString("vet_nom");
 		        	 heureDebut = resultatDisJour.getTimestamp("dis_debut");
 		        	 heureFin = resultatDisJour.getTimestamp("dis_fin");	
 		       
 		        	
 		        	
-		        	System.out.println(heureDebut);
-		        	
 		        	
 		        }
-		        
+		        listDispoJour.add(vet_nom);
 		        while(heureDebut.compareTo(heureFin) != 0) {
 		        	
 		        	long t=heureDebut.getTime();
@@ -231,14 +113,106 @@ public class ConnexionBDD {
 		        }
 		        
 		        
-		        System.out.println(listDispoJour);
-				
 				conn1.close();
+				
 			}catch(SQLException e) {
 				 System.out.println("Connexion echoué #1");
 		            e.printStackTrace();
 				
 			}
+			System.out.println(listDispoJour);
+			return  listDispoJour;
+	 }
+
+
+
+	 public ArrayList<Object> comparaisonDate(LocalDateTime dateDispo ,ArrayList<Object> listDispoJour ){
+		
+		/*DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateReformater = LocalDateTime.parse("18/03/2021 11:50", timeFormatter);*/
+		//System.out.println(dateDispo.toString().substring(0,10));
+		//System.out.println(dateDispo.toString().substring(0,4)+"-"+dateDispo.toString().substring(5,7)+"-"+);     
+		
+		/*dateDispo.toString().substring(4)
+		"1970-01-01 14:00:00.0"*/
+
+		Connection conn1 = null;   
+
+		ArrayList<Object> listRes = new ArrayList<Object>();
+
+
+		ArrayList<Object> listReturn= new ArrayList<Object>();
+		
+
+		listRes.add(listDispoJour.get(0));
+		try {
+			conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);	
+			String requeteDisJour = "SELECT * FROM rendezvous  LEFT JOIN veterinaire ON  rendezvous.vet_id = veterinaire.vet_id WHERE veterinaire.vet_nom= ? AND DATE(rv_debut) = ?";;
+			PreparedStatement prepStatDisJour = conn1.prepareStatement(requeteDisJour);
+			prepStatDisJour.setString(1, listDispoJour.get(0).toString());
+
+			prepStatDisJour.setDate(2, java.sql.Date.valueOf(dateDispo.toString().substring(0,10)));
+			//java.sql.Date.valueOf(dateJour)
+			ResultSet resultatDisJour = prepStatDisJour.executeQuery();
+			
+			
+			while (resultatDisJour.next()) {
+				Timestamp rvDebut = resultatDisJour.getTimestamp("rv_debut");
+				listRes.add(rvDebut);	
+				
+			}	
+			conn1.close();
+			int i = 0;
+			ArrayList<Integer> listIndex = new ArrayList<Integer>();
+			for (Object elementDispoJour : listDispoJour) {
+				String dateEntiere = elementDispoJour.toString();
+				String[] heures = dateEntiere.split(" ");
+				
+				for( Object elementRes : listRes){
+					String dateRes = elementRes.toString();
+					String[] heuresRes = dateRes.split(" ");
+					if(heures[1].equals(heuresRes[1])){
+						System.out.println( "Mon heure 1 :" + heures[1] + " | Mon heure Res " + heuresRes[1]);
+						listIndex.add(i);
+							
+					}
+			}
+
+				i++;
+			}
+
+		
+		
+			for (int j = listIndex.size()-1; j > 0; j--) {
+				System.out.println(listIndex.get(j));
+				listDispoJour.remove(listIndex.get(j).intValue());	
+			}
+
+
+			System.out.println(listDispoJour);
+			return listDispoJour;
+		
+			
+/*08:00:00.0
+08:20:00.0
+08:40:00.0
+09:00:00.0
+09:20:00.0
+09:40:00.0
+10:00:00.0
+10:20:00.0
+10:40:00.0
+11:00:00.0
+11:20:00.0
+11:40:00.0*/
+			
+		}catch(SQLException e) {
+			 System.out.println("Connexion echoué #1");
+				e.printStackTrace();
+			
+		}
+
+		return  listDispoJour;
 	 }
 	 
 }
