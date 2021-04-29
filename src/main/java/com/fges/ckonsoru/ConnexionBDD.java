@@ -1,8 +1,7 @@
 package com.fges.ckonsoru;
 
-import java.lang.reflect.Array;
+
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,10 +13,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.Properties;
-import java.util.TimeZone;
+
+
+
 
 public class ConnexionBDD {
     public ConfigLoader maConf = new ConfigLoader();
@@ -74,7 +74,7 @@ public class ConnexionBDD {
 
 
 
-	@SuppressWarnings("deprecation")
+
 	public ArrayList<Object> afficherDispo(LocalDateTime dateDispo , int vet_id) {
 		 Connection conn1 = null;   
 			
@@ -238,8 +238,8 @@ public class ConnexionBDD {
 
 	public void AffichageDispoCorrect(ArrayList<Object> listAllVetDispo , LocalDateTime dateJour){
 			
-			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        	LocalDateTime dateBonFormat = LocalDateTime.parse("18/02/2021 11:50", timeFormatter);
+			//DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        	//LocalDateTime dateBonFormat = LocalDateTime.parse("18/02/2021 11:50", timeFormatter);
 			String essai = dateJour.toString().substring(0,10);
 			essai = essai.substring(8,10)  + "/"+  essai.substring(5,7) + "/" + essai.substring(0,4) ;
 			//System.out.println(essai);
@@ -304,6 +304,62 @@ public class ConnexionBDD {
 
 		
 	}
+
+
+
+	public void priseRdv(String dateRdv , String nomVet , String nomClient){
+		Connection conn1 = null;
+
+		try {
+			String reform = dateRdv.substring(6,10) + "-" +  dateRdv.substring(0,2) + "-" + dateRdv.substring(3,5) + " "  + dateRdv.substring(11,16)+":00" ;
+			//System.out.println(reform);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Date parsedDate = dateFormat.parse(reform);
+			Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+			int idVet = 0;
+		try{
+			conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);
+
+			String requeteVetId = "SELECT vet_id FROM veterinaire  where vet_nom =  ?";
+			PreparedStatement prepStatVetId = conn1.prepareStatement(requeteVetId);
+			prepStatVetId.setString(1, nomVet);
+
+			//java.sql.Date.valueOf(dateJour)
+			ResultSet resultatVetId = prepStatVetId.executeQuery();
+			while(resultatVetId.next()){
+
+				idVet = resultatVetId.getInt("vet_id");
+			}
+
+
+
+			String requeteInsertRdv = "INSERT INTO rendezvous (vet_id,rv_debut,rv_client)"+
+			"VALUES (?,?,?)";
+			PreparedStatement pStmt = conn1.prepareStatement(requeteInsertRdv);
+			pStmt.setInt(1,idVet);
+			pStmt.setTimestamp(2, timestamp);
+			pStmt.setString(3,nomClient);
+			int rows =  pStmt.executeUpdate();
+			if( rows > 0) {
+				System.out.println("A new vet has been insert ");
+				}
+
+		}catch(SQLException e){
+			System.out.println("Connexion echoué #1");
+			e.printStackTrace();
+
+		}
+
+
+
+
+		} catch(Exception e) { //this generic but you can control another types of exception
+			// look the origin of excption 
+		}
+		
+	}
+
+
 
 }
 
