@@ -7,19 +7,13 @@ package com.fges.ckonsoru;
 
 
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+
 import java.time.format.DateTimeFormatter;
+import java.util.InputMismatchException;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -46,6 +40,12 @@ public class App {
         
         ConfigLoader cf = new ConfigLoader();
         Properties properties = cf.getProperties();
+
+
+        LocalDateTime rightNow = LocalDateTime.now();
+
+
+
         System.out.println("Mode de persistence : "
                 +properties.getProperty("persistence"));
         
@@ -63,13 +63,21 @@ public class App {
         System.out.println(choix);
         System.out.println("Entrer un numéro d action:");
 
-        
+        int  numero = 0;
+        ConnexionBDD test = null;
+        Scanner scanIn = null;
 
+        try{
 
-        
-        Scanner scanIn = new Scanner(System.in);
-        int numero = scanIn.nextInt();
-        ConnexionBDD test = new ConnexionBDD();
+            scanIn = new Scanner(System.in);
+            numero = scanIn.nextInt();
+            test = new ConnexionBDD();
+        }catch(InputMismatchException e){
+            System.out.println("Veullez rentrer un chiffre !");
+            System.exit(0);
+
+        }
+    
      
        while(numero != 9){
 
@@ -85,8 +93,37 @@ public class App {
                     String DateIn =  scannCrenaux.nextLine();
                     
 
+
                     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                    LocalDateTime debut = LocalDateTime.parse(DateIn+" 11:50", timeFormatter);
+                    LocalDateTime debut = LocalDateTime.parse(DateIn+" 01:00", timeFormatter);
+
+
+
+                    boolean isBefore = debut.isBefore(rightNow);
+                    
+                    while(isBefore){
+                        System.out.println("Veuillez choisir une date ou une horaire future et non passé ");
+                        System.out.println(choix);
+                        System.out.println("Entrer un numéro d action:");
+                        numero = scanIn.nextInt();
+                         
+                        //String explicationStrDispo = "Entrer une date au format JJ/MM/AAAA (ex: 18/03/2021) :";
+                        System.out.println(explicationStrDispo);
+                        
+                        scannCrenaux = new Scanner(System.in);
+                        DateIn =  scannCrenaux.nextLine();
+                        
+
+
+                        timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                        debut = LocalDateTime.parse(DateIn+" 01:00", timeFormatter);
+
+                        isBefore = debut.isBefore(rightNow);
+                    }
+
+
+
+                  
                     test.AffichageDispoCorrect(test.dispoAllVet(debut) , debut);
                     //scannCrenaux.close();
 
@@ -94,6 +131,11 @@ public class App {
                     System.out.println("Entrer un numéro d action:");
                     numero = scanIn.nextInt();
                 break;
+
+
+
+
+
                 case 2:
                     String explicationStrRdvCli = "Affichage des rendez-vous d un client \n" + "Indiquer le nom du client";
                     System.out.println(explicationStrRdvCli);
@@ -105,6 +147,12 @@ public class App {
                     System.out.println("Entrer un numéro d action:");
                     numero = scanIn.nextInt();
                 break;
+
+
+
+
+
+
                 case 3:
                     String explicationStrPriseRdv = "Prise de rendez-vous \n" + "Indiquer une date et heure de début au format JJ/MM/AAAA HH:MM (ex: 18/03/2021 15:00)";
                     System.out.println(explicationStrPriseRdv);
@@ -112,7 +160,38 @@ public class App {
                     Scanner scanDateRdv = new Scanner(System.in);
                     String dateRdv =  scanDateRdv.nextLine();
 
-                    System.out.println("ndiquer le nom du vétérinaire" );                   
+
+
+                    //de la 
+                    timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                    debut = LocalDateTime.parse(dateRdv, timeFormatter);
+
+
+
+                    isBefore = debut.isBefore(rightNow);
+
+                    while(isBefore){
+                        System.out.println("Veuillez choisir une date ou une horaire future et non passé ");
+                        System.out.println(explicationStrPriseRdv);
+                        dateRdv =  scanDateRdv.nextLine();
+
+                        timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                        debut = LocalDateTime.parse(dateRdv, timeFormatter);
+
+                        isBefore = debut.isBefore(rightNow);
+
+
+
+
+                    }
+
+
+                    // a la 
+
+
+
+
+                    System.out.println("Indiquer le nom du vétérinaire" );                   
                     Scanner scanNomRdv = new Scanner(System.in);
                     String nomVetRdv =  scanNomRdv.nextLine();
 
@@ -128,12 +207,41 @@ public class App {
                     System.out.println("Entrer un numéro d action:");
                     numero = scanIn.nextInt();
                 break;
+
+
+
+
+
                 case 4:
                     String explicationSupprimerRdv = "Indiquer une date et heure de début au format JJ/MM/AAAA HH:MM (ex: 18/03/2021 15:00)";
                     System.out.println(explicationSupprimerRdv);
                     
                     Scanner scanDateCliSupprRDV = new Scanner(System.in);
                     String DateRdvsupp = scanDateCliSupprRDV.nextLine();
+
+
+                    timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                    debut = LocalDateTime.parse(DateRdvsupp, timeFormatter);
+
+
+
+                    isBefore = debut.isBefore(rightNow);
+
+                    while(isBefore){
+                        System.out.println("Veuillez choisir une date ou une horaire future et non passé ");
+                        System.out.println(explicationSupprimerRdv);
+                        DateRdvsupp = scanDateCliSupprRDV.nextLine();
+
+                        timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                        debut = LocalDateTime.parse(DateRdvsupp, timeFormatter);
+
+                        isBefore = debut.isBefore(rightNow);
+
+
+
+
+                    }
+
 
                     System.out.println("Indiquer le nom du client");
                     Scanner scanNomCliSupprRDV = new Scanner(System.in);
@@ -148,6 +256,14 @@ public class App {
                     System.out.println("Entrer un numéro d action:");
                     numero = scanIn.nextInt();
                 break;
+
+
+
+
+
+
+
+
                 case 9:
                     System.exit(0);
                     break;
@@ -162,7 +278,6 @@ public class App {
         scanIn.close();
 
         
-        //System.out.println(sWhatever);
         
         
     }

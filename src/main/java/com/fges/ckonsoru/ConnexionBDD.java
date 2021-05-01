@@ -246,7 +246,7 @@ public class ConnexionBDD {
 		;
 
 			for (Object monObLi : listAllVetDispo) {
-				System.out.println(monObLi);
+				
 
 				String maStOb = monObLi.toString();
 				maStOb = maStOb.substring(1, maStOb.length()-1);
@@ -303,7 +303,7 @@ public class ConnexionBDD {
 
 		try {
 			String reform = dateRdv.substring(6,10) + "-" +  dateRdv.substring(0,2) + "-" + dateRdv.substring(3,5) + " "  + dateRdv.substring(11,16)+":00" ;
-			//System.out.println(reform);
+			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			Date parsedDate = dateFormat.parse(reform);
 			Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
@@ -315,7 +315,7 @@ public class ConnexionBDD {
 			PreparedStatement prepStatVetId = conn1.prepareStatement(requeteVetId);
 			prepStatVetId.setString(1, nomVet);
 
-			//java.sql.Date.valueOf(dateJour)
+			
 			ResultSet resultatVetId = prepStatVetId.executeQuery();
 			while(resultatVetId.next()){
 
