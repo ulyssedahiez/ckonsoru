@@ -127,7 +127,7 @@ public class ConnexionBDD {
 		            e.printStackTrace();
 				
 			}
-			//System.out.println(listDispoJour);
+		
 			return  listDispoJour;
 	 }
 
@@ -141,12 +141,12 @@ public class ConnexionBDD {
 		listRes.add(listDispoJour.get(0));
 		try {
 			conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);	
-			String requeteDisJour = "SELECT * FROM rendezvous  LEFT JOIN veterinaire ON  rendezvous.vet_id = veterinaire.vet_id WHERE veterinaire.vet_nom= ? AND DATE(rv_debut) = ?";;
+			String requeteDisJour = "SELECT * FROM rendezvous  LEFT JOIN veterinaire ON  rendezvous.vet_id = veterinaire.vet_id WHERE veterinaire.vet_nom= ? AND DATE(rv_debut) = ?";
 			PreparedStatement prepStatDisJour = conn1.prepareStatement(requeteDisJour);
 			prepStatDisJour.setString(1, listDispoJour.get(0).toString());
 
 			prepStatDisJour.setDate(2, java.sql.Date.valueOf(dateDispo.toString().substring(0,10)));
-			//java.sql.Date.valueOf(dateJour)
+	
 			ResultSet resultatDisJour = prepStatDisJour.executeQuery();
 			
 			
@@ -167,7 +167,7 @@ public class ConnexionBDD {
 						String dateRes = elementRes.toString();
 						String[] heuresRes = dateRes.split(" ");
 						if(heures[1].equals(heuresRes[1])){
-							//System.out.println( "Mon heure 1 :" + heures[1] + " | Mon heure Res " + heuresRes[1]);
+							
 							listIndex.add(i);
 								
 						}
@@ -177,7 +177,7 @@ public class ConnexionBDD {
 				}
 
 				for (int j = listIndex.size()-1; j > 0; j--) {
-					//System.out.println(listIndex.get(j));
+					
 					listDispoJour.remove(listIndex.get(j).intValue());	
 				}
 
@@ -188,7 +188,7 @@ public class ConnexionBDD {
 		
 	
 
-			//System.out.println(listDispoJour);
+			
 			return listDispoJour;
 		
 			
@@ -229,7 +229,7 @@ public class ConnexionBDD {
 				e.printStackTrace();
 			
 		}
-		//System.out.println("La grande list est : " +listReturn);
+	
 		return  listReturn;
 	}
 
@@ -238,15 +238,16 @@ public class ConnexionBDD {
 
 	public void AffichageDispoCorrect(ArrayList<Object> listAllVetDispo , LocalDateTime dateJour){
 			
-			//DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        	//LocalDateTime dateBonFormat = LocalDateTime.parse("18/02/2021 11:50", timeFormatter);
 			String essai = dateJour.toString().substring(0,10);
 			essai = essai.substring(8,10)  + "/"+  essai.substring(5,7) + "/" + essai.substring(0,4) ;
-			//System.out.println(essai);
-			//2021-02-18
+			
 			ArrayList<String> st = new  ArrayList<String>();
 
+		;
+
 			for (Object monObLi : listAllVetDispo) {
+				System.out.println(monObLi);
+
 				String maStOb = monObLi.toString();
 				maStOb = maStOb.substring(1, maStOb.length()-1);
 				String[] decoupe = maStOb.split(",");
@@ -278,31 +279,21 @@ public class ConnexionBDD {
 				
 			}
 
+
 			for (int j = 0; j < indexNom.size(); j++) {
-				if(indexNom.get(j) != indexNom.get(indexNom.size()-1)){
-					for (int k = 0; k < indexNom.get(j+1); k++){
-						System.out.println(
-						noms.get(j) + " : " + essai + " " + dates.get(k)
+				if(indexNom.get(j) == indexNom.get(indexNom.size()-1)){
+					for (int l = indexNom.get(j).intValue()-1; l < dates.size(); l++){
+					System.out.println(noms.get(indexNom.size()-1) + " : " + essai + " " + dates.get(l)
 
 						);
-						
 					}
 				}else{
-					for (int l = indexNom.get(j).intValue(); l < dates.size()-1; l++){
-					System.out.println(
-						noms.get(indexNom.size()-1) + " : " + essai + " " + dates.get(l)
-
-						);
+					for (int k = 0; k < indexNom.get(j+1)-1; k++){
+						System.out.println(noms.get(j) + " : " + essai + " " + dates.get(k)
+						);						
 					}
-
-				}
-				
+				}	
 			}
-
-
-
-
-		
 	}
 
 
