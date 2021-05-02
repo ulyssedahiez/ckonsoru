@@ -73,23 +73,22 @@ public class App {
         System.out.println(choix);
         System.out.println("Entrer un numéro d action:");
 
+        Ecran Ecran = new Ecran();
         
-        Disponibilites test = new Disponibilites();
-        AfficherRDV testRDV = new AfficherRDV();
-        AjouterRDV testADD = new AjouterRDV();
-        
-        
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime debut = LocalDateTime.parse("27/05/2021 11:50", timeFormatter);
+        Ecran.lecran();
         
         
-        //test.getAllDidponibilite( debut);
-        //testRDV.getAllRDV("M. Byrnison");
+               
         
-        testADD.addRDV("L. Belacqua", "27/05/2021 10:20", "B. Costa");
         
-        test.getAllDidponibilite(debut);
-       
+        
+        
+        	
+        
+        //System.out.println(sWhatever);
+        
+        
+        
         
         
         

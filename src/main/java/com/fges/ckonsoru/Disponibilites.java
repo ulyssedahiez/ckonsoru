@@ -51,7 +51,7 @@ public class Disponibilites {
 			Set<String> mySet = new HashSet<String>(Vetodb);
 		    List<String> Veto = new ArrayList<String>(mySet);
 		    
-			System.out.println(Veto);
+			
 			for (int i = 0; i <Veto.size() ; i++) {
 				ListDispo = searchDidponibilite ( Date, Veto.get(i));
 				for (int j = 0; j <ListDispo.size() ; j++) {
@@ -72,9 +72,9 @@ public class Disponibilites {
 		ArrayList<String> RendezVous = new ArrayList<String>();
 		ArrayList<Integer> Index = new ArrayList<Integer>();
 		Disponibilites = getDisponibilites(Veterinaire,Date);
-		//System.out.println(" 1 "+Disponibilites);
+		
 		RendezVous = getRDVVeto(Veterinaire, Date);
-		//System.out.println(" 2 "+RendezVous);
+		
 		for(int i = 0; i<Disponibilites.size(); i++) {
 			for(int j = 0; j<RendezVous.size(); j++) {
 				if(Disponibilites.get(i).equals(RendezVous.get(j))) {
@@ -82,13 +82,12 @@ public class Disponibilites {
 				}
 			}
 		}
-		//System.out.println("Index : "+Index);
+		
 		for(int i = Index.size()-1; i>=0; i--) {
 			Disponibilites.remove(Index.get(i).intValue());
 			
 		}
 		
-		//System.out.println(" fin : "+ Disponibilites);
 		return Disponibilites;
 	} catch (Exception e) {
 		return Disponibilites;

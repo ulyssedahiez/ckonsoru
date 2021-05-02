@@ -95,13 +95,11 @@ public class AjouterRDV {
 				TransformerFactory transformerFactory = TransformerFactory.newInstance();
 				Transformer transformer = null;
 				try {
-					if(rdv.equals(transformer)) {
+					
 					transformer = transformerFactory.newTransformer();
-					transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-					transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "0");
-					}else {
-						transformer = transformerFactory.newTransformer();
-					}
+					/*transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+					transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "0");*/
+					
 
 				} catch (TransformerConfigurationException e) {
 					// TODO Auto-generated catch block
