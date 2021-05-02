@@ -1,4 +1,4 @@
-package com.fges.ckonsoru;
+package com.fges.ckonsoru.bdd;
 
 
 import java.sql.Connection;
@@ -15,6 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
+
+import com.fges.ckonsoru.ConfigLoader;
 
 
 public class ConnexionBDD {
@@ -69,10 +71,6 @@ public class ConnexionBDD {
 
         }
 	}
-
-
-
-
 
 
 	// Recupere les diapo d'un client 

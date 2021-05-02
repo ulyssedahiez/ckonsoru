@@ -1,4 +1,4 @@
-package com.fges.ckonsoru;
+package com.fges.ckonsoru.bdd;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
