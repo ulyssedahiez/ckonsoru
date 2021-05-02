@@ -17,9 +17,8 @@ import java.util.Date;
 import java.util.Properties;
 
 
-
-
 public class ConnexionBDD {
+
     public ConfigLoader maConf = new ConfigLoader();
     public Properties prop = maConf.getProperties();
 	
@@ -31,8 +30,7 @@ public class ConnexionBDD {
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     LocalDateTime debut = LocalDateTime.parse("05/05/2018 11:50", timeFormatter);
     
-    
-	
+    // Afficher tout les rdv Client ! 
 	
 	public  void rdvClientAfficher(String nomClient) {
 		Connection conn1 = null;  
@@ -75,9 +73,12 @@ public class ConnexionBDD {
 
 
 
+
+
+	// Recupere les diapo d'un client 
+
 	public ArrayList<Object> afficherDispo(LocalDateTime dateDispo , int vet_id) {
-		 Connection conn1 = null;   
-			
+		Connection conn1 = null;   		
 			ArrayList<Object> listDispoJour = new ArrayList<Object>(); 
 			
 			String vet_nom = "";
@@ -97,11 +98,9 @@ public class ConnexionBDD {
 					 vet_nom = resultatDisJour.getString("vet_nom");
 		        	 heureDebut = resultatDisJour.getTimestamp("dis_debut");
 		        	 heureFin = resultatDisJour.getTimestamp("dis_fin");	
-		       
-		        	
-		        	
 		        	
 		        }
+
 		        listDispoJour.add(vet_nom);
 				if(heureDebut != null){
 					while(heureDebut.compareTo(heureFin) != 0) {
@@ -110,34 +109,26 @@ public class ConnexionBDD {
 						long m= 20*60*1000;
 						listDispoJour.add(heureDebut);
 	
-						heureDebut = new Timestamp(t+m);
-						
-						
+						heureDebut = new Timestamp(t+m);			
 					}
 				}else{
 					return  listDispoJour;
-				}
-		        
-		        
-		        
+				}     
 				conn1.close();
 				
 			}catch(SQLException e) {
 				 System.out.println("Connexion echoué #1");
-		            e.printStackTrace();
-				
-			}
-		
+		            e.printStackTrace();		
+		}	
 			return  listDispoJour;
-	 }
+	}
 
 
 
-	 public ArrayList<Object> comparaisonDate(LocalDateTime dateDispo ,ArrayList<Object> listDispoJour ){
-
+	// comparasion date Dispo et rdv pris se jour 
+	public ArrayList<Object> comparaisonDate(LocalDateTime dateDispo ,ArrayList<Object> listDispoJour ){
 		Connection conn1 = null;   
-		ArrayList<Object> listRes = new ArrayList<Object>();
-		
+		ArrayList<Object> listRes = new ArrayList<Object>();	
 		listRes.add(listDispoJour.get(0));
 		try {
 			conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);	
@@ -149,12 +140,12 @@ public class ConnexionBDD {
 	
 			ResultSet resultatDisJour = prepStatDisJour.executeQuery();
 			
-			
 			while (resultatDisJour.next()) {
 				Timestamp rvDebut = resultatDisJour.getTimestamp("rv_debut");
 				listRes.add(rvDebut);	
 				
 			}	
+
 			conn1.close();
 			int i = 0;
 			ArrayList<Integer> listIndex = new ArrayList<Integer>();
@@ -166,32 +157,21 @@ public class ConnexionBDD {
 					for( Object elementRes : listRes){
 						String dateRes = elementRes.toString();
 						String[] heuresRes = dateRes.split(" ");
-						if(heures[1].equals(heuresRes[1])){
-							
-							listIndex.add(i);
-								
+						if(heures[1].equals(heuresRes[1])){							
+							listIndex.add(i);			
 						}
-				}
-	
+					}
+
 					i++;
 				}
 
-				for (int j = listIndex.size()-1; j > 0; j--) {
-					
+				for (int j = listIndex.size()-1; j > 0; j--) {	
 					listDispoJour.remove(listIndex.get(j).intValue());	
 				}
 
-
-			}
-			
-
-		
-	
-
-			
+			}		
 			return listDispoJour;
 		
-			
 		}catch(SQLException e) {
 			 System.out.println("Connexion echoué #1");
 				e.printStackTrace();
@@ -202,6 +182,8 @@ public class ConnexionBDD {
 	}
 
 
+
+	// Dispo all vet
 	public ArrayList<Object> dispoAllVet(LocalDateTime dateDispo) {
 		Connection conn1 = null;
 		ArrayList<Integer> listId = new ArrayList<Integer>();
@@ -234,8 +216,7 @@ public class ConnexionBDD {
 	}
 
 
-
-
+	// Affichage pour tout les Veto
 	public void AffichageDispoCorrect(ArrayList<Object> listAllVetDispo , LocalDateTime dateJour){
 			
 			String essai = dateJour.toString().substring(0,10);
@@ -247,7 +228,6 @@ public class ConnexionBDD {
 
 			for (Object monObLi : listAllVetDispo) {
 				
-
 				String maStOb = monObLi.toString();
 				maStOb = maStOb.substring(1, maStOb.length()-1);
 				String[] decoupe = maStOb.split(",");
@@ -276,7 +256,6 @@ public class ConnexionBDD {
 					}
 				}
 				
-				
 			}
 
 
@@ -298,6 +277,7 @@ public class ConnexionBDD {
 
 
 
+	// Prise de RDV 
 	public void priseRdv(String dateRdv , String nomVet , String nomClient){
 		Connection conn1 = null;
 
@@ -308,41 +288,37 @@ public class ConnexionBDD {
 			Date parsedDate = dateFormat.parse(reform);
 			Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
 			int idVet = 0;
-		try{
-			conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);
 
-			String requeteVetId = "SELECT vet_id FROM veterinaire  where vet_nom =  ?";
-			PreparedStatement prepStatVetId = conn1.prepareStatement(requeteVetId);
-			prepStatVetId.setString(1, nomVet);
+			try{
+				conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);
 
-			
-			ResultSet resultatVetId = prepStatVetId.executeQuery();
-			while(resultatVetId.next()){
+				String requeteVetId = "SELECT vet_id FROM veterinaire  where vet_nom =  ?";
+				PreparedStatement prepStatVetId = conn1.prepareStatement(requeteVetId);
+				prepStatVetId.setString(1, nomVet);
 
-				idVet = resultatVetId.getInt("vet_id");
-			}
+				
+				ResultSet resultatVetId = prepStatVetId.executeQuery();
+				while(resultatVetId.next()){
 
-
-
-			String requeteInsertRdv = "INSERT INTO rendezvous (vet_id,rv_debut,rv_client)"+
-			"VALUES (?,?,?)";
-			PreparedStatement pStmt = conn1.prepareStatement(requeteInsertRdv);
-			pStmt.setInt(1,idVet);
-			pStmt.setTimestamp(2, timestamp);
-			pStmt.setString(3,nomClient);
-			int rows =  pStmt.executeUpdate();
-			if( rows > 0) {
-				System.out.println("Un rendez-vous pour " + nomClient +  " avec " + nomVet + " a été réservé le " +  dateRdv);
+					idVet = resultatVetId.getInt("vet_id");
 				}
 
-		}catch(SQLException e){
-			System.out.println("Connexion echoué #1");
-			e.printStackTrace();
+				String requeteInsertRdv = "INSERT INTO rendezvous (vet_id,rv_debut,rv_client)"+
+				"VALUES (?,?,?)";
+				PreparedStatement pStmt = conn1.prepareStatement(requeteInsertRdv);
+				pStmt.setInt(1,idVet);
+				pStmt.setTimestamp(2, timestamp);
+				pStmt.setString(3,nomClient);
+				int rows =  pStmt.executeUpdate();
+				if( rows > 0) {
+					System.out.println("Un rendez-vous pour " + nomClient +  " avec " + nomVet + " a été réservé le " +  dateRdv);
+					}
 
-		}
+			}catch(SQLException e){
+				System.out.println("Connexion echoué #1");
+				e.printStackTrace();
 
-
-
+			}
 
 		} catch(Exception e) { //this generic but you can control another types of exception
 			// look the origin of excption 
@@ -350,7 +326,7 @@ public class ConnexionBDD {
 		
 	}
 
-
+	// Suppr RDV 
 
 	public void supprRdv(String dateRdv , String nomClient){
 		Connection conn1 = null;
@@ -361,39 +337,30 @@ public class ConnexionBDD {
 			Date parsedDate = dateFormat.parse(reform);
 			Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
 			
-		try{
-			conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);
+			try{
+				conn1 = DriverManager.getConnection( this.url , this.login, this.mdp);
 
 
-			String requeteDeleteRdv = "DELETE FROM rendezvous WHERE rv_debut = ? AND rv_client = ?";
-			PreparedStatement pStmt = conn1.prepareStatement(requeteDeleteRdv);
-			pStmt.setTimestamp(1, timestamp);
-			pStmt.setString(2, nomClient);
-			
-			int rows =  pStmt.executeUpdate();
-			if( rows > 0) {
-				System.out.println("Un rendez-vous pour " + nomClient +  " pour le " +  dateRdv + " à été supprimé ");
-				}
+				String requeteDeleteRdv = "DELETE FROM rendezvous WHERE rv_debut = ? AND rv_client = ?";
+				PreparedStatement pStmt = conn1.prepareStatement(requeteDeleteRdv);
+				pStmt.setTimestamp(1, timestamp);
+				pStmt.setString(2, nomClient);
+				
+				int rows =  pStmt.executeUpdate();
+				if( rows > 0) {
+					System.out.println("Un rendez-vous pour " + nomClient +  " pour le " +  dateRdv + " à été supprimé ");
+					}
 
-		}catch(SQLException e){
-			System.out.println("Connexion echoué #1");
-			e.printStackTrace();
+			}catch(SQLException e){
+				System.out.println("Connexion echoué #1");
+				e.printStackTrace();
 
+			}
+
+
+		} catch(Exception e) { 	
 		}
-
-
-
-
-		} catch(Exception e) { //this generic but you can control another types of exception
-			// look the origin of excption 
-		}
-
-
-
 	}
-
-
-
 }
 
 

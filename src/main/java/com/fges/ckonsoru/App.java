@@ -1,38 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.fges.ckonsoru;
-
-
-
-
 import java.text.ParseException;
-
 import java.time.LocalDateTime;
-
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.Properties;
 import java.util.Scanner;
 
 
-
-
-
-
-/**
- * Launch the App
- * @author julie.jacques
- */
 public class App {
-	
-
-	
-	
-	
-
 
     public static void main(String args[]) throws ParseException{
       
@@ -41,17 +17,10 @@ public class App {
         ConfigLoader cf = new ConfigLoader();
         Properties properties = cf.getProperties();
 
-
         LocalDateTime rightNow = LocalDateTime.now();
-
-
 
         System.out.println("Mode de persistence : "
                 +properties.getProperty("persistence"));
-        
-
-
-
 
         String choix = "Actions disponibles : \n"
         + "1: Afficher les créneaux disponibles pour une date donnée\r\n"
@@ -79,13 +48,9 @@ public class App {
         }
     
      
-       while(numero != 9){
-
-        
-            
+       while(numero != 9){ 
             switch(numero) {
-                case 1:
-                    
+                case 1:                    
                     String explicationStrDispo = "Entrer une date au format JJ/MM/AAAA (ex: 18/03/2021) :";
                     System.out.println(explicationStrDispo);
                     
@@ -96,8 +61,6 @@ public class App {
 
                     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
                     LocalDateTime debut = LocalDateTime.parse(DateIn+" 01:00", timeFormatter);
-
-
 
                     boolean isBefore = debut.isBefore(rightNow);
                     
@@ -114,26 +77,19 @@ public class App {
                         DateIn =  scannCrenaux.nextLine();
                         
 
-
                         timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
                         debut = LocalDateTime.parse(DateIn+" 01:00", timeFormatter);
 
                         isBefore = debut.isBefore(rightNow);
                     }
 
-
-
-                  
+   
                     test.AffichageDispoCorrect(test.dispoAllVet(debut) , debut);
-                    //scannCrenaux.close();
 
                     System.out.println(choix);
                     System.out.println("Entrer un numéro d action:");
                     numero = scanIn.nextInt();
                 break;
-
-
-
 
 
                 case 2:
@@ -147,9 +103,6 @@ public class App {
                     System.out.println("Entrer un numéro d action:");
                     numero = scanIn.nextInt();
                 break;
-
-
-
 
 
 
@@ -180,14 +133,7 @@ public class App {
 
                         isBefore = debut.isBefore(rightNow);
 
-
-
-
                     }
-
-
-                    // a la 
-
 
 
 
@@ -200,16 +146,12 @@ public class App {
                     String nomCliRdv =  scanNomCliRdv.nextLine();
                     
                     
-                    //String essai = "27/05/2021 08:20";
-                    //test.priseRdv(essai,"L. Belacqua","B. Costa");
+   
                     test.priseRdv(dateRdv,nomVetRdv,nomCliRdv);
                     System.out.println(choix);
                     System.out.println("Entrer un numéro d action:");
                     numero = scanIn.nextInt();
                 break;
-
-
-
 
 
                 case 4:
@@ -223,8 +165,6 @@ public class App {
                     timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
                     debut = LocalDateTime.parse(DateRdvsupp, timeFormatter);
 
-
-
                     isBefore = debut.isBefore(rightNow);
 
                     while(isBefore){
@@ -236,9 +176,6 @@ public class App {
                         debut = LocalDateTime.parse(DateRdvsupp, timeFormatter);
 
                         isBefore = debut.isBefore(rightNow);
-
-
-
 
                     }
 
@@ -258,12 +195,6 @@ public class App {
                 break;
 
 
-
-
-
-
-
-
                 case 9:
                     System.exit(0);
                     break;
@@ -277,9 +208,7 @@ public class App {
         }
         scanIn.close();
 
-        
-        
-        
+
     }
     
 }
