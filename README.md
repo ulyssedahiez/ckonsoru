@@ -17,7 +17,7 @@ Lien du git : https://github.com/DahiezU/ckonsoru.git
     Cette  classe   permet d'intéragir avec la BDD , c'est  la classe principale de l'application Ckonsoru . <br>
     Elle permet de  recuperer les informations de la bases et de les traiter \. <br>
     N'ayant ps vu que vous utilisiez la fonction creneauxDisponibles en sql , j'ai de nombreuses fonctions <br> 
-    permettant d'avoir le meme résultat en bien moins propre et bien plus de ligne de code <br> 
+    permettant d'avoir le meme résultat en bien moins propre et bien plus de ligne de code \.<br> 
         -  Function rdvClientAfficher :
             -   Affiche  tout les rdvs d'un Client
         -   Function  afficherDispo :
