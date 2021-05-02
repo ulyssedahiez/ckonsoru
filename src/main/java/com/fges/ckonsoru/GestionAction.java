@@ -38,19 +38,28 @@ public class GestionAction {
 
 
 
-
     public boolean compareDate(LocalDateTime dateRentre){
-        return true;
+        LocalDateTime rightNow = LocalDateTime.now();
+        boolean isBefore = dateRentre.isBefore(rightNow);
+        return isBefore;
 
     }
 
+
+
+    public LocalDateTime convertStringToDate(String dateString){
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDateTime debut = LocalDateTime.parse(dateString, timeFormatter);
+        return debut;
+
+    }
 
     public void  doAction(){
             int numero = this.selectChoix();
           
             while(numero != 9){
                 ConnexionBDD test = new ConnexionBDD();
-                LocalDateTime rightNow = LocalDateTime.now();
+    
                 switch(numero) {
                     case 1:                    
                         String explicationStrDispo = "Entrer une date au format JJ/MM/AAAA (ex: 18/03/2021) :";
@@ -95,22 +104,14 @@ public class GestionAction {
 
 
                         //de la 
-                        timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                        debut = LocalDateTime.parse(dateRdv, timeFormatter);
-
-
-
-                        boolean isBefore = debut.isBefore(rightNow);
-
-                        while(isBefore){
+                        
+                        boolean boolTest =  this.compareDate(this.convertStringToDate(dateRdv));
+                        while(boolTest){
                             System.out.println("Veuillez choisir une date ou une horaire future et non passé ");
                             System.out.println(explicationStrPriseRdv);
                             dateRdv =  scanDateRdv.nextLine();
 
-                            timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                            debut = LocalDateTime.parse(dateRdv, timeFormatter);
-
-                            isBefore = debut.isBefore(rightNow);
+                            boolTest = this.compareDate(this.convertStringToDate(dateRdv));
 
                         }
 
@@ -139,20 +140,17 @@ public class GestionAction {
                         String DateRdvsupp = scanDateCliSupprRDV.nextLine();
 
 
-                        timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                        debut = LocalDateTime.parse(DateRdvsupp, timeFormatter);
 
-                        isBefore = debut.isBefore(rightNow);
+                        boolTest =  this.compareDate(this.convertStringToDate(DateRdvsupp));
 
-                        while(isBefore){
+                        while(boolTest){
                             System.out.println("Veuillez choisir une date ou une horaire future et non passé ");
                             System.out.println(explicationSupprimerRdv);
                             DateRdvsupp = scanDateCliSupprRDV.nextLine();
 
-                            timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                            debut = LocalDateTime.parse(DateRdvsupp, timeFormatter);
+    
 
-                            isBefore = debut.isBefore(rightNow);
+                            boolTest =  this.compareDate(this.convertStringToDate(DateRdvsupp));
 
                         }
 
