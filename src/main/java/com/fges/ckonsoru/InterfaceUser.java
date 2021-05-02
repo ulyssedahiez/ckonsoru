@@ -1,5 +1,5 @@
 package com.fges.ckonsoru;
 
-public class ConnexionXML {
+public class InterfaceUser {
 
 }
