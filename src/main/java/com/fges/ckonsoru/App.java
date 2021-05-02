@@ -1,12 +1,12 @@
 
-package com.fges.ckonsoru.bdd;
+package com.fges.ckonsoru;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Properties;
 
 import javax.xml.transform.TransformerException;
 
-import com.fges.ckonsoru.ConfigLoader;
+import com.fges.ckonsoru.bdd.GestionAction;
 import com.fges.ckonsoru.xml.Ecran;
 
 import org.xml.sax.SAXException;
