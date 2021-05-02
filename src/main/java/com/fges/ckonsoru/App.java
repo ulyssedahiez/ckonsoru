@@ -26,6 +26,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
 
@@ -47,7 +48,7 @@ public class App {
 	
 
 
-    public static void main(String args[]) throws ParseException, ParserConfigurationException, SAXException, IOException{
+    public static void main(String args[]) throws ParseException, ParserConfigurationException, SAXException, IOException, TransformerException{
    
         System.out.println("Bienvenue sur Clinique Konsoru !");
         
@@ -73,19 +74,22 @@ public class App {
         System.out.println("Entrer un numéro d action:");
 
         
-        ConnexionXML test = new ConnexionXML();
-        //test.mainXml();
+        Disponibilites test = new Disponibilites();
+        AfficherRDV testRDV = new AfficherRDV();
+        AjouterRDV testADD = new AjouterRDV();
+        
         
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime debut = LocalDateTime.parse("18/03/2021 11:50", timeFormatter);
-        
-        test.getDisponibilites("L. Asriel", debut);
-        
-        //System.out.println(test.getDay(debut));
+        LocalDateTime debut = LocalDateTime.parse("27/05/2021 11:50", timeFormatter);
         
         
+        //test.getAllDidponibilite( debut);
+        //testRDV.getAllRDV("M. Byrnison");
         
-        //System.out.println(test.getRDVVeto("L. Asriel", debut));
+        testADD.addRDV("L. Belacqua", "27/05/2021 10:20", "B. Costa");
+        
+        test.getAllDidponibilite(debut);
+       
         
         
         
