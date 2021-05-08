@@ -26,8 +26,9 @@ import javax.xml.transform.TransformerException;
 
 
 public class SupprimerRDV {
-	File file = new File(".\\src\\main\\resources\\ckonsoru.xml");
-	public void SupprRdv(String Date, String Client) throws TransformerException, SAXException {
+	ConnexionXmlDAO dataXml = new ConnexionXmlDAO();
+	File file = dataXml.getFile("ckonsoru.xml");
+	public void SupprRdvSuppr(String Date, String Client) throws TransformerException, SAXException {
 	
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
@@ -87,6 +88,7 @@ public class SupprimerRDV {
 		} catch (IOException | ParserConfigurationException e) {
 		e.printStackTrace(System.err);
 		}
+		return;
 	}
 
 
