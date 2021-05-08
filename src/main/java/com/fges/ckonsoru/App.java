@@ -9,6 +9,7 @@ import javax.xml.transform.TransformerException;
 
 import com.fges.ckonsoru.bdd.ConnexionBddDAO;
 import com.fges.ckonsoru.bdd.GestionAction;
+import com.fges.ckonsoru.metier.Client;
 import com.fges.ckonsoru.xml.Ecran;
 
 import org.xml.sax.SAXException;
@@ -52,9 +53,10 @@ public class App {
        
         */
 
-
+        Client cli = new Client("M. Byrnison");
         ConnexionBddDAO test = new ConnexionBddDAO();
-        test.ListerPlanningParVeto();
+        //test.ListerPlanningParVeto();
+        test.ListerRDV(cli );
     }
 
 }
