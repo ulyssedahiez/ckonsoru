@@ -22,7 +22,7 @@ public class Disponibilite {
 
     @Override
     public String toString() {
-        return "Veto : " + this.veto + " a " + this.date;
+        return  this.veto + " : " + this.date;
     }
   
 

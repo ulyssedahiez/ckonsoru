@@ -10,6 +10,7 @@ import javax.xml.transform.TransformerException;
 import com.fges.ckonsoru.bdd.ConnexionBddDAO;
 import com.fges.ckonsoru.bdd.DateConv;
 import com.fges.ckonsoru.bdd.GestionAction;
+import com.fges.ckonsoru.bdd.GestionRdvDAO;
 import com.fges.ckonsoru.metier.Client;
 import com.fges.ckonsoru.xml.Ecran;
 
@@ -54,15 +55,20 @@ public class App {
        
         */
 
-        Client cli = new Client("M. Byrnison");
+        /*Client cli = new Client("M. Byrnison");
         ConnexionBddDAO test = new ConnexionBddDAO();
         DateConv convertisseur = new DateConv();
 
-       //System.out.println(convertisseur.stringToDate("23/05/2021 13:37")); 
+       
 
-       test.ListerDisponibilite( convertisseur.stringToDate("23/05/2021 13:37") ,"L. Belacqua" );
-        /*test.ListerPlanningParVeto("L. Belacqua");
-         test.ListerRDV(cli );*/
+       test.ListerDisponibilite( convertisseur.stringToDate("18/03/2021 13:37"));
+        DateConv convertisseur = new DateConv();
+        
+        GestionRdvDAO.AfficherListePlanningParVeto(convertisseur.stringToDate("18/03/2021 13:37"));*/
+
+            
+   
+        
     }
 
 }
