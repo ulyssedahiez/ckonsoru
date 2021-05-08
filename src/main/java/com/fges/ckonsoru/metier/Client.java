@@ -1,4 +1,4 @@
-package com.fges.ckonsoru.bdd;
+package com.fges.ckonsoru.metier;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ public class Client{
     private String nom;
     private List<RDV> rdvs ;
 
-    public  Client( String nom,List<RDV> rdvs){
+    public  Client(String nom){
         this.nom = nom;
-        this.rdvs = rdvs;
+        
     }
 
     public String getNom(){

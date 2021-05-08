@@ -1,4 +1,4 @@
-package com.fges.ckonsoru.bdd;
+package com.fges.ckonsoru.metier;
 
 import java.util.List;
 

@@ -3,6 +3,12 @@ package com.fges.ckonsoru.bdd;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fges.ckonsoru.metier.Disponibilite;
+
+import com.fges.ckonsoru.metier.RDV;
+
+import com.fges.ckonsoru.metier.Client;
+
 public interface GestionRdvDAO {
 
    

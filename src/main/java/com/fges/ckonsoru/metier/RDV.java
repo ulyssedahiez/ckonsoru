@@ -1,7 +1,10 @@
-package com.fges.ckonsoru.bdd;
+package com.fges.ckonsoru.metier;
 
 
 import java.time.LocalDateTime;
+
+import com.fges.ckonsoru.bdd.DateConv;
+import com.fges.ckonsoru.metier.Client;
 
 public class RDV {
     private LocalDateTime dateRdv ;
@@ -26,6 +29,13 @@ public class RDV {
 
     public Client getClient(){
         return this.client;
+    }
+
+    @Override
+    public String toString() {
+        DateConv convertisseur = new DateConv();
+        //return convertisseur.afficherGoodFormat(this.dateRdv.toString()) + "avec " + this.veto;
+        return (this.dateRdv + "avec " + this.veto) ;
     }
 
 

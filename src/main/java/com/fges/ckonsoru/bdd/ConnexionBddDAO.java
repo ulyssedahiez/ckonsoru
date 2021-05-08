@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Properties;
 
 import com.fges.ckonsoru.ConfigLoader;
+import com.fges.ckonsoru.metier.Disponibilite;
+import com.fges.ckonsoru.metier.PlanningJour;
+import com.fges.ckonsoru.metier.RDV;
+import com.fges.ckonsoru.metier.Client;
 
 public class ConnexionBddDAO {
     protected Connection bddConn;
@@ -27,15 +31,11 @@ public class ConnexionBddDAO {
     //protected Connection bddConn = DriverManager.getConnection(this.url , this.login, this.mdp);
 
     public Connection connexionGestionRdv() throws SQLException{
-        /*this.url = url ;
-        this.login = login;
-        this.mdp = mdp;*/
         return this.bddConn = DriverManager.getConnection( this.url , this.login, this.mdp);
     }
 
 
     public void ListerPlanningParVeto() throws SQLException{
-        //List<Disponibilite> mesPlannings = new ArrayList<Disponibilite>();
 
         String sqlPlanning= "  SELECT vet_nom, jou_libelle, dis_debut, dis_fin \n"
         +  "FROM disponibilite \n"
@@ -59,7 +59,7 @@ public class ConnexionBddDAO {
             LocalDateTime heure_fin = resultatLen.getTimestamp("dis_fin").toLocalDateTime();
             Disponibilite maDispo = new Disponibilite(heure_debut , nomVet);
             mesDispo.add(maDispo);
-            //System.out.println(convDate.ajout20Minute(heure_debut.toLocalDateTime()));
+         
             while(heure_debut.equals(heure_fin) == false){
                 heure_debut = convDate.ajout20Minute(heure_debut);
                 maDispo = new Disponibilite(heure_debut, nomVet);
@@ -70,9 +70,7 @@ public class ConnexionBddDAO {
 
             System.out.println(planning.toString());
 
-        }
-    
-        
+        }  
     }
 
 
@@ -82,22 +80,63 @@ public class ConnexionBddDAO {
     }
 
 
-    public List<RDV> ListerRDV(Client monClient){
+    public List<RDV> ListerRDV(Client monClient) throws SQLException{
         List<RDV> mesRdv = new ArrayList<RDV>();
+        
+        String sqlRdv= "SELECT rv_id, rv_debut, rv_client , vet_nom \n"
+        +"FROM rendezvous \n"
+        +"FULL JOIN veterinaire \n"
+        +"ON rendezvous.vet_id = veterinaire.vet_id \n"
+        +"WHERE rv_client = ? \n"
+        +"ORDER BY rv_debut DESC \n" ;
+
+        PreparedStatement monPrepStatLen = this.connexionGestionRdv().prepareStatement(sqlRdv);
+        monPrepStatLen.setString(1, monClient.getNom());
+
+        ResultSet resultatLen = monPrepStatLen.executeQuery();
+        
+        while (resultatLen.next()) {
+            LocalDateTime dateRdv = resultatLen.getTimestamp("rv_debut").toLocalDateTime();
+            String nomVet =  resultatLen.getString("vet_nom");
+
+            RDV monRdv  = new RDV(dateRdv, nomVet, monClient.getNom());
+            
+            System.out.println(monRdv);
+            
+            mesRdv.add(monRdv);
+        }
         return mesRdv;
+        
+        
     }
 
 
-    /*public void SupprimerRDV(LocalDateTime dateDonnee , Client nomClient){
-        
+    /*public void SupprimerRDV(LocalDateTime dateDonnee , Client monClient){
+      
+		String requeteDeleteRdv = "DELETE FROM rendezvous WHERE rv_debut = ? AND rv_client = ?";
+		PreparedStatement pStmt = this.connexionGestionRdv().prepareStatement(requeteDeleteRdv);
+		pStmt.setTimestamp(1, dateDonnee);
+		pStmt.setString(2, monClient.getNom());
     }*/
 
 
-    /* public void AjoutRDV(LocalDateTime dateDonnee , Client nomClient ){
+    public void AjoutRDV(LocalDateTime dateDonnee , Client monClient , String nomVet) throws SQLException{
+        String requeteInsertRdv = "INSERT INTO rendezvous (vet_id, rv_debut, rv_client) \n"
+        +"VALUES((SELECT vet_id FROM veterinaire WHERE vet_nom = ?), \n"
+            +" ?,\n"
+            +" ? )";
+		
         
+        Timestamp timestamp = Timestamp.valueOf(dateDonnee);
+
+        PreparedStatement pStmt = this.connexionGestionRdv().prepareStatement(requeteInsertRdv);
+        pStmt.setString(1,nomVet);
+        pStmt.setTimestamp(2, timestamp);
+        pStmt.setString(3,monClient.getNom());
+       
     }
     
-    */
+
 
 
 
