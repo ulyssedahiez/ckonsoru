@@ -16,5 +16,6 @@ public class ConnexionXmlDAO {
 		else {
 			return null;
 		}
+		//connexion pour choisir le xml si on veut changer
 	}
 }
