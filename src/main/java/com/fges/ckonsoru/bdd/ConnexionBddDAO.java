@@ -35,17 +35,21 @@ public class ConnexionBddDAO {
     }
 
 
-    public void ListerPlanningParVeto() throws SQLException{
+    /**public void ListerPlanningParVeto(String nomVeto , String jourSemaine ) throws SQLException{
 
         String sqlPlanning= "  SELECT vet_nom, jou_libelle, dis_debut, dis_fin \n"
         +  "FROM disponibilite \n"
         + "INNER JOIN veterinaire \n" 
         +"ON veterinaire.vet_id = disponibilite.vet_id \n" 
         + " INNER JOIN jour \n" 
-        +"ON jour.jou_id = dis_jour \n" 
+        +"ON jour.jou_id = dis_jour \n"
+        +"WHERE vet_nom = ? AND\n" 
+        +"WHERE jou_libelle = ?\n "
         +" ORDER BY vet_nom, dis_id\n" ;
         
         PreparedStatement monPrepStatLen = this.connexionGestionRdv().prepareStatement(sqlPlanning);
+        monPrepStatLen.setString(1, nomVeto);
+        monPrepStatLen.setString(2, jourSemaine);
         ResultSet resultatLen = monPrepStatLen.executeQuery();
         
         DateConv convDate = new DateConv();
@@ -72,11 +76,63 @@ public class ConnexionBddDAO {
 
         }  
     }
+     **/
 
 
-    public List<Disponibilite> ListerDisponibilite(LocalDateTime dateDonnee){
-    List<Disponibilite> mesDispos = new ArrayList<Disponibilite>();
-    return mesDispos;
+    public List<Disponibilite> ListerDisponibilite(LocalDateTime dateDonnee , String  Veto) throws SQLException{
+        List<Disponibilite> mesDispos = new ArrayList<Disponibilite>();
+        String sqlPlanning= " WITH creneauxDisponibles AS  \n "
+        +"(SELECT vet_nom, generate_series( ?::date+dis_debut,  \n"
+                               +" ?::date+dis_fin-'00:20:00'::time, \n"
+                               +"'20 minutes'::interval) debut \n"
+        +"FROM disponibilite  \n"
+            +"INNER JOIN veterinaire  \n" 
+                +"ON veterinaire.vet_id = disponibilite.vet_id  \n"
+        +"WHERE dis_jour = EXTRACT('DOW' FROM ?::date)  \n"
+        +"ORDER BY vet_nom, dis_id),  \n"
+        +"creneauxReserves AS  \n" 
+        +"(SELECT vet_nom, rv_debut debut  \n"
+        +"FROM rendezvous  \n"
+            +"INNER JOIN veterinaire  \n"
+            +"ON veterinaire.vet_id = rendezvous.vet_id  \n"
+            +"WHERE rv_debut  \n" 
+            +"BETWEEN ?::date  \n" 
+            +"AND ?::date +'23:59:59'::time),  \n"
+        +"creneauxRestants AS  \n"
+        +"(SELECT * FROM creneauxDisponibles  \n"
+        +"EXCEPT  \n"
+        +"SELECT * FROM creneauxReserves)  \n"
+        +"SELECT * FROM creneauxRestants  \n"
+        +"ORDER BY vet_nom, debut  \n" ;
+        
+        Timestamp timestamp = Timestamp.valueOf(dateDonnee);
+        PreparedStatement monPrepStatLen = this.connexionGestionRdv().prepareStatement(sqlPlanning);
+        monPrepStatLen.setTimestamp(1, timestamp);
+        monPrepStatLen.setTimestamp(2, timestamp);
+        monPrepStatLen.setTimestamp(3, timestamp);
+        monPrepStatLen.setTimestamp(4, timestamp);
+        monPrepStatLen.setTimestamp(5, timestamp);
+        
+        /**monPrepStatLen.setTimestamp(1, "18-03-2021");
+        monPrepStatLen.setTimestamp(2, "18-03-2021");
+        monPrepStatLen.setTimestamp(3, "18-03-2021");
+        monPrepStatLen.setTimestamp(4, "18-03-2021");
+        monPrepStatLen.setTimestamp(5, "18-03-2021");**/
+        
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        ResultSet resultatLen = monPrepStatLen.executeQuery();
+        System.out.println("ddddddddddddddddddddddddddddddddddddddddddd");
+        while (resultatLen.next()) {
+            LocalDateTime date  = resultatLen.getTimestamp("rv_debut").toLocalDateTime();
+            System.out.println("ddddddddddddddddddddddddddddddddddddddddddd");
+            String nonVet = resultatLen.getString("vet_nom");
+           
+            Disponibilite creneauDispo = new Disponibilite(date ,nonVet );
+            mesDispos.add(creneauDispo);
+            
+        }
+        return mesDispos;
+
     }
 
 
@@ -99,7 +155,7 @@ public class ConnexionBddDAO {
             LocalDateTime dateRdv = resultatLen.getTimestamp("rv_debut").toLocalDateTime();
             String nomVet =  resultatLen.getString("vet_nom");
 
-            RDV monRdv  = new RDV(dateRdv, nomVet, monClient.getNom());
+            RDV monRdv  = new RDV(dateRdv, nomVet, monClient);
             
             System.out.println(monRdv);
             
@@ -125,7 +181,6 @@ public class ConnexionBddDAO {
         +"VALUES((SELECT vet_id FROM veterinaire WHERE vet_nom = ?), \n"
             +" ?,\n"
             +" ? )";
-		
         
         Timestamp timestamp = Timestamp.valueOf(dateDonnee);
 
