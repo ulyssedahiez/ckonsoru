@@ -21,10 +21,12 @@ import org.xml.sax.SAXException;
 
 
 public class AjouterRDV {
+	ConnexionXmlDAO dataXml = new ConnexionXmlDAO();
+	File file = dataXml.getFile("ckonsoru.xml");
 	
-	File filepath = new File(".\\src\\main\\resources\\ckonsoru.xml");
 	
-	public void addRDV(String Veterinaire, String Date, String Client) throws SAXException, TransformerException {
+	
+	public void addRDVAjouter(String Veterinaire, String Date, String Client) throws SAXException, TransformerException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		DocumentBuilder builder;
@@ -99,9 +101,13 @@ public class AjouterRDV {
 				StreamResult result = new StreamResult(filepath);
 				transformer.transform(source, result);
 		} catch (IOException | ParserConfigurationException e) {
+		String filepath = null;
 		System.err.println("Erreur à l'ouverture de la bdd xml : " + filepath);
 		e.printStackTrace(System.err);
 		}
+		
+		return;
 	}
+	
 
 }

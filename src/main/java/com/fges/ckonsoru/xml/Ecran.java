@@ -11,10 +11,8 @@ import org.xml.sax.SAXException;
 
 public class Ecran {
 	public void lecran() throws SAXException, IOException, TransformerException {
-		Disponibilites test = new Disponibilites();
-        AfficherRDV testRDV = new AfficherRDV();
-        AjouterRDV testADD = new AjouterRDV();
-        SupprimerRDV testSuppr = new SupprimerRDV();
+		FonctionalitesDAO fonct = new FonctionalitesDAO();
+        
         String choix = "Actions disponibles : \n"
                 + "1: Afficher les créneaux disponibles pour une date donnée\r\n"
                 + "2: Lister les rendez-vous passés, présent et à venir d un client\r\n"
@@ -37,7 +35,7 @@ public class Ecran {
 		
 		                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 		                    LocalDateTime debut = LocalDateTime.parse(DateIn+" 11:50", timeFormatter);
-		                    test.getAllDidponibilite(debut);
+		                    fonct.AfficherList(fonct.getRDVVeto(debut));
 		                    //scannCrenaux.close();
 		
 		                    System.out.println(choix);
@@ -49,7 +47,7 @@ public class Ecran {
 		                    System.out.println(explicationStrRdvCli);
 		                    Scanner scanNom = new Scanner(System.in);
 		                    String nomCli =  scanNom.nextLine();
-		                    testRDV.getAllRDV(nomCli);
+		                    fonct.AfficherList(fonct.getAllRDV(nomCli));
 		
 		                    System.out.println(choix);
 		                    System.out.println("Entrer un numéro d action:");
@@ -70,7 +68,7 @@ public class Ecran {
 		                    Scanner scanNomCliRdv = new Scanner(System.in);
 		                    String nomCliRdv =  scanNomCliRdv.nextLine();
 		                    
-		                    testADD.addRDV(nomVetRdv, dateRdv,nomCliRdv);
+		                    fonct.addRDV(nomVetRdv, dateRdv,nomCliRdv);
 		                    System.out.println(choix);
 		                    System.out.println("Entrer un numéro d action:");
 		                    numero = scanIn.nextInt();
@@ -89,7 +87,7 @@ public class Ecran {
 		
 		                    //String essai = "27/05/2021 08:20";
 		                    
-		                    testSuppr.SupprRdv(DateRdvsupp, nomCliRdvsupp);
+		                    fonct.SupprRdv(DateRdvsupp, nomCliRdvsupp);
 		                    
 		                    System.out.println(choix);
 		                    System.out.println("Entrer un numéro d action:");

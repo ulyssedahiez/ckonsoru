@@ -16,10 +16,11 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 public class AfficherRDV {
-	File file = new File(".\\src\\main\\resources\\ckonsoru.xml");
+	ConnexionXmlDAO dataXml = new ConnexionXmlDAO();
+	File file = dataXml.getFile("ckonsoru.xml");
 
 	
-	public void getAllRDV(String Client) throws SAXException, IOException {
+	public ArrayList<String> getAllRDVAfficher(String Client) throws SAXException, IOException {
 		
 		ArrayList<String> RendezVous = new ArrayList<String>();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
@@ -65,8 +66,6 @@ public class AfficherRDV {
 					RendezVous.add(Complet);
 		        }
 			}
-			
-			
 						
 			
 		} catch (Exception e) {
@@ -74,7 +73,8 @@ public class AfficherRDV {
 		}
 		
 		
-		
+		return RendezVous;
 	  
 	}
+	
 }

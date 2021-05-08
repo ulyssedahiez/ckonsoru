@@ -21,10 +21,13 @@ import java.time.LocalDateTime;
 
 public class Disponibilites {
 
-	File file = new File(".\\src\\main\\resources\\ckonsoru.xml");
+	ConnexionXmlDAO dataXml = new ConnexionXmlDAO();
+	File file = dataXml.getFile("ckonsoru.xml");
 
 	
-	public void getAllDidponibilite (LocalDateTime Date) throws SAXException, IOException {
+	public ArrayList<String> getAllDidponibiliteDispo(LocalDateTime Date) throws SAXException, IOException {
+		
+		ArrayList<String> Liste = new ArrayList<String>();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
 		//an instance of builder to parse the specified xml file  
 		DocumentBuilder db;
@@ -49,13 +52,14 @@ public class Disponibilites {
 			for (int i = 0; i <Veto.size() ; i++) {
 				ListDispo = searchDidponibilite ( Date, Veto.get(i));
 				for (int j = 0; j <ListDispo.size() ; j++) {
-					System.out.println(ListDispo.get(j));
+					Liste.add(ListDispo.get(j));
 				}
 			}
 		} catch (ParserConfigurationException e) {
 			
 			e.printStackTrace();
 		}  
+		return Liste;
 	}
 	
 	
