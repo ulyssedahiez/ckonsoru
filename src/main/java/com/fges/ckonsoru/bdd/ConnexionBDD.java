@@ -265,9 +265,9 @@ public class ConnexionBDD {
 						);
 					}
 				}else{
-					for (int k = 0; k < indexNom.get(j+1)-1; k++){
-						System.out.println(noms.get(j) + " : " + essai + " " + dates.get(k)
-						);						
+					for (int k = 0; k < indexNom.get(j+1)-2; k++){
+						System.out.println(noms.get(j) + " : " + essai + " " + dates.get(k));
+						
 					}
 				}	
 			}
