@@ -5,12 +5,10 @@ import java.io.Serializable;
 
 // La classe doit être sérialisable
 public class ClientMetier implements Serializable {
-
-   private static final long serialVersionUID = 1L;
    
    // les propriétés sont privées (interfaces à privilégier)
    private String name;
-   private Set<ClientMetier> rdv;
+   private ArrayList<RendezVousMetier> rdvs;
 
    // il existe un constructeur public sans argument
    public ClientMetier() {
@@ -19,10 +17,10 @@ public class ClientMetier implements Serializable {
 
    // getters
    public String getName() { return name; }
-   public Set<ClientMetier> getFriends() { return rdv; }
+   public Set<ClientMetier> getFriends() { return rdvs; }
 
    // setters
    public void setName(String name) { this.name = name; }
-   public void setFriends(Set<ClientMetier> friends) { this.rdv = friends; }
+   public void setFriends(Set<ClientMetier> friends) { this.rdvs = friends; }
 
 }
