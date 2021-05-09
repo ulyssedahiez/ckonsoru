@@ -55,20 +55,9 @@ public class App {
        
         */
 
-        /*Client cli = new Client("M. Byrnison");
-        ConnexionBddDAO test = new ConnexionBddDAO();
-        DateConv convertisseur = new DateConv();
+      
 
-       
 
-       test.ListerDisponibilite( convertisseur.stringToDate("18/03/2021 13:37"));
-        DateConv convertisseur = new DateConv();
-        
-        GestionRdvDAO.AfficherListePlanningParVeto(convertisseur.stringToDate("18/03/2021 13:37"));*/
-
-            
-   
-        
     }
 
 }

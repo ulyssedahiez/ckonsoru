@@ -172,13 +172,15 @@ public class ConnexionBddDAO {
     }
 
 
-    /*public void SupprimerRDV(LocalDateTime dateDonnee , Client monClient){
+    public void SupprimerRDV(LocalDateTime dateDonnee , Client monClient) throws SQLException{
       
 		String requeteDeleteRdv = "DELETE FROM rendezvous WHERE rv_debut = ? AND rv_client = ?";
 		PreparedStatement pStmt = this.connexionGestionRdv().prepareStatement(requeteDeleteRdv);
-		pStmt.setTimestamp(1, dateDonnee);
+        Timestamp timestamp = Timestamp.valueOf(dateDonnee);
+		pStmt.setTimestamp(1, timestamp);
 		pStmt.setString(2, monClient.getNom());
-    }*/
+        pStmt.executeUpdate();
+    }
 
 
     public void AjoutRDV(LocalDateTime dateDonnee , Client monClient , String nomVet) throws SQLException{
@@ -186,22 +188,20 @@ public class ConnexionBddDAO {
         +"VALUES((SELECT vet_id FROM veterinaire WHERE vet_nom = ?), \n"
             +" ?,\n"
             +" ? )";
-        
         Timestamp timestamp = Timestamp.valueOf(dateDonnee);
-
         PreparedStatement pStmt = this.connexionGestionRdv().prepareStatement(requeteInsertRdv);
         pStmt.setString(1,nomVet);
         pStmt.setTimestamp(2, timestamp);
         pStmt.setString(3,monClient.getNom());
+        int rows =  pStmt.executeUpdate();
+				if( rows > 0) {
+					System.out.println("Un rendez-vous pour " + monClient.getNom() +  " avec " + nomVet + " a été réservé le " +  dateDonnee);
+					}
+        
        
     }
     
 
-
-
-
-
-        
     
 
 }
