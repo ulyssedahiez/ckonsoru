@@ -30,13 +30,7 @@ public class AfficherRDV {
 		
 		RDV Complet = new RDV(rienDate, "veto", Client);
 		
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
-		//an instance of builder to parse the specified xml file  
-		DocumentBuilder db;
-		
-			db = dbf.newDocumentBuilder();
-			Document doc = db.parse(file); 
-			doc.getDocumentElement().normalize();  
+		Document doc = ConnexionXmlSingleton.getInstance().getDoc(); 
 			
 			NodeList RDVC = doc.getElementsByTagName("rdv");
 			Node DebutRendezVous = (Node) RDVC.item(0).getChildNodes();

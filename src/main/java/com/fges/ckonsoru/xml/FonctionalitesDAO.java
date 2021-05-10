@@ -10,6 +10,7 @@ import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 import com.fges.ckonsoru.metier.Client;
+import com.fges.ckonsoru.metier.Disponibilite;
 import com.fges.ckonsoru.metier.RDV;
 
 
@@ -20,7 +21,7 @@ public class FonctionalitesDAO {
 	SupprimerRDV suppr = new SupprimerRDV();
 	AfficherListe affich = new AfficherListe();
 	
-	public ArrayList<String> getRDVVeto( LocalDateTime dateRDV) throws SAXException, IOException{
+	public ArrayList<Disponibilite> getRDVVeto( LocalDateTime dateRDV) throws SAXException, IOException{
 		
 		return dispo.getAllDidponibiliteDispo(dateRDV);
 	}
@@ -50,7 +51,12 @@ public class FonctionalitesDAO {
 		return;
 	}
 	
-	
+
+	public void AfficherListDispo(ArrayList<Disponibilite> rdvVeto) {
+		affich.AfficherListeAfficheDispo(rdvVeto);
+		return;
+		
+	}
 	
 	
 	

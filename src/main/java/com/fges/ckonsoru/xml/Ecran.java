@@ -36,7 +36,7 @@ public class Ecran {
 		
 		                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 		                    LocalDateTime debut = LocalDateTime.parse(DateIn+" 11:50", timeFormatter);
-		                    //fonct.AfficherList(fonct.getRDVVeto(debut));
+		                    fonct.AfficherListDispo(fonct.getRDVVeto(debut));
 		                    //scannCrenaux.close();
 		
 		                    System.out.println(choix);
