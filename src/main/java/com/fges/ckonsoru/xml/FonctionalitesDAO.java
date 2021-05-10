@@ -12,6 +12,7 @@ import org.xml.sax.SAXException;
 import com.fges.ckonsoru.metier.Client;
 import com.fges.ckonsoru.metier.RDV;
 
+
 public class FonctionalitesDAO {
 	Disponibilites dispo = new Disponibilites();
 	AfficherRDV affi = new AfficherRDV();
