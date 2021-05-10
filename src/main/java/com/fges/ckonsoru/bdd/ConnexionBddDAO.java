@@ -14,7 +14,6 @@ import java.util.Properties;
 
 import com.fges.ckonsoru.ConfigLoader;
 import com.fges.ckonsoru.metier.Disponibilite;
-import com.fges.ckonsoru.metier.PlanningJour;
 import com.fges.ckonsoru.metier.RDV;
 import com.fges.ckonsoru.metier.Client;
 
@@ -79,58 +78,64 @@ public class ConnexionBddDAO {
      **/
 
 
-    public List<Disponibilite> ListerDisponibilite(LocalDateTime dateDonnee , String  Veto) throws SQLException{
+    public List<Disponibilite> ListerDisponibilite(LocalDateTime dateDonnee) throws SQLException{
         List<Disponibilite> mesDispos = new ArrayList<Disponibilite>();
-        String sqlPlanning= " WITH creneauxDisponibles AS  \n "
-        +"(SELECT vet_nom, generate_series( ?::date+dis_debut,  \n"
-                               +" ?::date+dis_fin-'00:20:00'::time, \n"
-                               +"'20 minutes'::interval) debut \n"
-        +"FROM disponibilite  \n"
-            +"INNER JOIN veterinaire  \n" 
-                +"ON veterinaire.vet_id = disponibilite.vet_id  \n"
-        +"WHERE dis_jour = EXTRACT('DOW' FROM ?::date)  \n"
-        +"ORDER BY vet_nom, dis_id),  \n"
-        +"creneauxReserves AS  \n" 
-        +"(SELECT vet_nom, rv_debut debut  \n"
-        +"FROM rendezvous  \n"
-            +"INNER JOIN veterinaire  \n"
-            +"ON veterinaire.vet_id = rendezvous.vet_id  \n"
-            +"WHERE rv_debut  \n" 
-            +"BETWEEN ?::date  \n" 
-            +"AND ?::date +'23:59:59'::time),  \n"
-        +"creneauxRestants AS  \n"
-        +"(SELECT * FROM creneauxDisponibles  \n"
-        +"EXCEPT  \n"
-        +"SELECT * FROM creneauxReserves)  \n"
-        +"SELECT * FROM creneauxRestants  \n"
-        +"ORDER BY vet_nom, debut  \n" ;
         
-        Timestamp timestamp = Timestamp.valueOf(dateDonnee);
+        String sqlPlanning = "WITH creneauxDisponibles AS \n"
+        +"(SELECT vet_nom, generate_series( ? ::date+dis_debut, \n"
+                               +" ? ::date+dis_fin-'00:20:00'::time, \n"
+                               +"'20 minutes'::interval) debut\n"
+        +"FROM disponibilite \n"
+            +"INNER JOIN veterinaire \n"
+               +" ON veterinaire.vet_id = disponibilite.vet_id \n"
+        +"WHERE dis_jour = EXTRACT('DOW' FROM ? ::date) \n"
+        +"ORDER BY vet_nom, dis_id), \n"
+        +"creneauxReserves AS  \n"
+        +"(SELECT vet_nom, rv_debut debut \n"
+        +" FROM rendezvous \n"
+            +"INNER JOIN veterinaire \n"
+            +"ON veterinaire.vet_id = rendezvous.vet_id \n"
+            +"WHERE rv_debut \n"
+            +"BETWEEN ? ::date \n" 
+            +"AND ? ::date +'23:59:59'::time), \n"
+        +"creneauxRestants AS \n"
+        +"(SELECT * FROM creneauxDisponibles \n"
+        +"EXCEPT \n"
+        +"SELECT * FROM creneauxReserves) \n"
+        +"SELECT * FROM creneauxRestants \n"
+        +"ORDER BY vet_nom, debut \n" ;
+        
+      
         PreparedStatement monPrepStatLen = this.connexionGestionRdv().prepareStatement(sqlPlanning);
-        monPrepStatLen.setTimestamp(1, timestamp);
-        monPrepStatLen.setTimestamp(2, timestamp);
-        monPrepStatLen.setTimestamp(3, timestamp);
-        monPrepStatLen.setTimestamp(4, timestamp);
-        monPrepStatLen.setTimestamp(5, timestamp);
         
-        /**monPrepStatLen.setTimestamp(1, "18-03-2021");
-        monPrepStatLen.setTimestamp(2, "18-03-2021");
-        monPrepStatLen.setTimestamp(3, "18-03-2021");
-        monPrepStatLen.setTimestamp(4, "18-03-2021");
-        monPrepStatLen.setTimestamp(5, "18-03-2021");**/
+
+
+        String usdate = dateDonnee.toString().substring(0,10);
+        String[] arr = usdate.split("-");
+        String eudate = arr[2] + "-" + arr[1] + "-" + arr[0];
+     
         
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        
+        monPrepStatLen.setString(1, eudate);
+        monPrepStatLen.setString(2, eudate);
+        monPrepStatLen.setString(3, eudate);
+        monPrepStatLen.setString(4, eudate);
+        monPrepStatLen.setString(5, eudate);
+
+      
         ResultSet resultatLen = monPrepStatLen.executeQuery();
-        System.out.println("ddddddddddddddddddddddddddddddddddddddddddd");
+     
         while (resultatLen.next()) {
-            LocalDateTime date  = resultatLen.getTimestamp("rv_debut").toLocalDateTime();
-            System.out.println("ddddddddddddddddddddddddddddddddddddddddddd");
+            LocalDateTime date  = resultatLen.getTimestamp("debut").toLocalDateTime();
+       
             String nonVet = resultatLen.getString("vet_nom");
            
             Disponibilite creneauDispo = new Disponibilite(date ,nonVet );
-            mesDispos.add(creneauDispo);
+           mesDispos.add(creneauDispo);
             
         }
+
+
         return mesDispos;
 
     }
@@ -167,13 +172,15 @@ public class ConnexionBddDAO {
     }
 
 
-    /*public void SupprimerRDV(LocalDateTime dateDonnee , Client monClient){
+    public void SupprimerRDV(LocalDateTime dateDonnee , Client monClient) throws SQLException{
       
 		String requeteDeleteRdv = "DELETE FROM rendezvous WHERE rv_debut = ? AND rv_client = ?";
 		PreparedStatement pStmt = this.connexionGestionRdv().prepareStatement(requeteDeleteRdv);
-		pStmt.setTimestamp(1, dateDonnee);
+        Timestamp timestamp = Timestamp.valueOf(dateDonnee);
+		pStmt.setTimestamp(1, timestamp);
 		pStmt.setString(2, monClient.getNom());
-    }*/
+        pStmt.executeUpdate();
+    }
 
 
     public void AjoutRDV(LocalDateTime dateDonnee , Client monClient , String nomVet) throws SQLException{
@@ -181,22 +188,20 @@ public class ConnexionBddDAO {
         +"VALUES((SELECT vet_id FROM veterinaire WHERE vet_nom = ?), \n"
             +" ?,\n"
             +" ? )";
-        
         Timestamp timestamp = Timestamp.valueOf(dateDonnee);
-
         PreparedStatement pStmt = this.connexionGestionRdv().prepareStatement(requeteInsertRdv);
         pStmt.setString(1,nomVet);
         pStmt.setTimestamp(2, timestamp);
         pStmt.setString(3,monClient.getNom());
+        int rows =  pStmt.executeUpdate();
+				if( rows > 0) {
+					System.out.println("Un rendez-vous pour " + monClient.getNom() +  " avec " + nomVet + " a été réservé le " +  dateDonnee);
+					}
+        
        
     }
     
 
-
-
-
-
-        
     
 
 }
