@@ -2,6 +2,7 @@ package com.fges.ckonsoru.metier;
 
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Disponibilite {
     private LocalDateTime date;
@@ -22,7 +23,11 @@ public class Disponibilite {
 
     @Override
     public String toString() {
-        return  this.veto + " : " + this.date;
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+		LocalDateTime debut1 = LocalDateTime.parse(this.date.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        
+        return ( this.veto + " : " + debut1.format(timeFormatter) ) ;
     }
   
 

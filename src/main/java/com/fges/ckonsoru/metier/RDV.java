@@ -2,6 +2,7 @@ package com.fges.ckonsoru.metier;
 
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.fges.ckonsoru.bdd.DateConv;
 import com.fges.ckonsoru.metier.Client;
@@ -33,9 +34,11 @@ public class RDV {
 
     @Override
     public String toString() {
-        DateConv convertisseur = new DateConv();
-        //return convertisseur.afficherGoodFormat(this.dateRdv.toString()) + "avec " + this.veto;
-        return (this.dateRdv + "avec " + this.veto) ;
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+		LocalDateTime debut1 = LocalDateTime.parse(this.dateRdv.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        
+        return ( debut1.format(timeFormatter)+ " avec " + this.veto) ;
     }
 
 

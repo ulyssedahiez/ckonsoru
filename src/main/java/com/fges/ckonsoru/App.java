@@ -7,13 +7,9 @@ import java.util.Properties;
 
 import javax.xml.transform.TransformerException;
 
-import com.fges.ckonsoru.bdd.ConnexionBddDAO;
-import com.fges.ckonsoru.bdd.DateConv;
-import com.fges.ckonsoru.bdd.GestionAction;
-import com.fges.ckonsoru.bdd.GestionRdvDAO;
-import com.fges.ckonsoru.metier.Client;
-import com.fges.ckonsoru.xml.Ecran;
 
+import com.fges.ckonsoru.bdd.GestionAction;
+import com.fges.ckonsoru.xml.Ecran;
 import org.xml.sax.SAXException;
 
 
@@ -21,7 +17,7 @@ public class App {
 
     public static void main(String args[]) throws ParseException, SAXException, IOException, TransformerException, SQLException{
       
-        /*System.out.println("Bienvenue sur Clinique Konsoru !");
+        System.out.println("Bienvenue sur Clinique Konsoru !");
         
         ConfigLoader cf = new ConfigLoader();
         Properties properties = cf.getProperties();
@@ -53,8 +49,8 @@ public class App {
             maGestion.doAction();
         }
        
-        */
-
+    
+       
       
 
 

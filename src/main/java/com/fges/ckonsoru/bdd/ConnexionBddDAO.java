@@ -18,64 +18,24 @@ import com.fges.ckonsoru.metier.RDV;
 import com.fges.ckonsoru.metier.Client;
 
 public class ConnexionBddDAO {
-    protected Connection bddConn;
+    
+    /*protected Connection bddConn;
 
     public ConfigLoader maConf = new ConfigLoader();
     public Properties prop = maConf.getProperties();
 
     private String url = prop.getProperty("bdd.url");
     private String login = prop.getProperty("bdd.login");
-    private String mdp = prop.getProperty("bdd.mdp");
+    private String mdp = prop.getProperty("bdd.mdp");*/
+
     
     //protected Connection bddConn = DriverManager.getConnection(this.url , this.login, this.mdp);
 
-    public Connection connexionGestionRdv() throws SQLException{
+    /*public Connection connexionGestionRdv() throws SQLException{
         return this.bddConn = DriverManager.getConnection( this.url , this.login, this.mdp);
-    }
+    }*/
 
-
-    /**public void ListerPlanningParVeto(String nomVeto , String jourSemaine ) throws SQLException{
-
-        String sqlPlanning= "  SELECT vet_nom, jou_libelle, dis_debut, dis_fin \n"
-        +  "FROM disponibilite \n"
-        + "INNER JOIN veterinaire \n" 
-        +"ON veterinaire.vet_id = disponibilite.vet_id \n" 
-        + " INNER JOIN jour \n" 
-        +"ON jour.jou_id = dis_jour \n"
-        +"WHERE vet_nom = ? AND\n" 
-        +"WHERE jou_libelle = ?\n "
-        +" ORDER BY vet_nom, dis_id\n" ;
-        
-        PreparedStatement monPrepStatLen = this.connexionGestionRdv().prepareStatement(sqlPlanning);
-        monPrepStatLen.setString(1, nomVeto);
-        monPrepStatLen.setString(2, jourSemaine);
-        ResultSet resultatLen = monPrepStatLen.executeQuery();
-        
-        DateConv convDate = new DateConv();
-        List<Disponibilite> mesDispo = new ArrayList<Disponibilite>();
-        
-        while (resultatLen.next()) {
-            
-            String nomVet = resultatLen.getString("vet_nom");
-            String jour =  resultatLen.getString("jou_libelle");
-            LocalDateTime heure_debut = resultatLen.getTimestamp("dis_debut").toLocalDateTime();
-            LocalDateTime heure_fin = resultatLen.getTimestamp("dis_fin").toLocalDateTime();
-            Disponibilite maDispo = new Disponibilite(heure_debut , nomVet);
-            mesDispo.add(maDispo);
-         
-            while(heure_debut.equals(heure_fin) == false){
-                heure_debut = convDate.ajout20Minute(heure_debut);
-                maDispo = new Disponibilite(heure_debut, nomVet);
-                mesDispo.add(maDispo);
-            }
-
-            PlanningJour planning = new PlanningJour(jour, nomVet, mesDispo);
-
-            System.out.println(planning.toString());
-
-        }  
-    }
-     **/
+  
 
 
     public List<Disponibilite> ListerDisponibilite(LocalDateTime dateDonnee) throws SQLException{
@@ -106,7 +66,7 @@ public class ConnexionBddDAO {
         +"ORDER BY vet_nom, debut \n" ;
         
       
-        PreparedStatement monPrepStatLen = this.connexionGestionRdv().prepareStatement(sqlPlanning);
+        PreparedStatement monPrepStatLen = ConnexionSingleton.getInstance().getConnection().prepareStatement(sqlPlanning);
         
 
 
@@ -141,7 +101,7 @@ public class ConnexionBddDAO {
     }
 
 
-    public List<RDV> ListerRDV(Client monClient) throws SQLException{
+   public List<RDV> ListerRDV(Client monClient) throws SQLException{
         List<RDV> mesRdv = new ArrayList<RDV>();
         
         String sqlRdv= "SELECT rv_id, rv_debut, rv_client , vet_nom \n"
@@ -151,7 +111,7 @@ public class ConnexionBddDAO {
         +"WHERE rv_client = ? \n"
         +"ORDER BY rv_debut DESC \n" ;
 
-        PreparedStatement monPrepStatLen = this.connexionGestionRdv().prepareStatement(sqlRdv);
+        PreparedStatement monPrepStatLen = ConnexionSingleton.getInstance().getConnection().prepareStatement(sqlRdv);
         monPrepStatLen.setString(1, monClient.getNom());
 
         ResultSet resultatLen = monPrepStatLen.executeQuery();
@@ -175,7 +135,7 @@ public class ConnexionBddDAO {
     public void SupprimerRDV(LocalDateTime dateDonnee , Client monClient) throws SQLException{
       
 		String requeteDeleteRdv = "DELETE FROM rendezvous WHERE rv_debut = ? AND rv_client = ?";
-		PreparedStatement pStmt = this.connexionGestionRdv().prepareStatement(requeteDeleteRdv);
+		PreparedStatement pStmt = ConnexionSingleton.getInstance().getConnection().prepareStatement(requeteDeleteRdv);
         Timestamp timestamp = Timestamp.valueOf(dateDonnee);
 		pStmt.setTimestamp(1, timestamp);
 		pStmt.setString(2, monClient.getNom());
@@ -189,7 +149,7 @@ public class ConnexionBddDAO {
             +" ?,\n"
             +" ? )";
         Timestamp timestamp = Timestamp.valueOf(dateDonnee);
-        PreparedStatement pStmt = this.connexionGestionRdv().prepareStatement(requeteInsertRdv);
+        PreparedStatement pStmt = ConnexionSingleton.getInstance().getConnection().prepareStatement(requeteInsertRdv);
         pStmt.setString(1,nomVet);
         pStmt.setTimestamp(2, timestamp);
         pStmt.setString(3,monClient.getNom());

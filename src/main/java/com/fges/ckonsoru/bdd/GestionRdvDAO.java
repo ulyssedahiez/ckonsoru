@@ -21,7 +21,7 @@ public class GestionRdvDAO {
 
 
 
-    public static List<RDV> ListerRDV(Client monClient) throws SQLException{
+   public static List<RDV> ListerRDV(Client monClient) throws SQLException{
         return maCo.ListerRDV(monClient);
     }
 
