@@ -20,8 +20,7 @@ import com.fges.ckonsoru.metier.Client;
 import com.fges.ckonsoru.metier.RDV;
 
 public class AfficherRDV {
-	ConnexionXmlDAO dataXml = new ConnexionXmlDAO();
-	File file = dataXml.getFile("ckonsoru.xml");
+	
 
 	
 	public ArrayList<RDV> getAllRDVAfficher(Client Client) throws SAXException, IOException, ParserConfigurationException {

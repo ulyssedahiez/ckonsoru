@@ -62,7 +62,7 @@ public class GestionAction {
             DateConv convertisseur = new DateConv();
           
             while(numero != 9){
-                ConnexionBDD test = new ConnexionBDD();
+                
     
                 switch(numero) {
                     case 1: 

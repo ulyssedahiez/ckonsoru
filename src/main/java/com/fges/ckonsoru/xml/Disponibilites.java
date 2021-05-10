@@ -25,9 +25,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Disponibilites {
 
-	ConnexionXmlDAO dataXml = new ConnexionXmlDAO();
-	File file = dataXml.getFile("ckonsoru.xml");
-
+	
 	
 	public ArrayList<Disponibilite> getAllDidponibiliteDispo(LocalDateTime Date) throws SAXException, IOException {
 		
