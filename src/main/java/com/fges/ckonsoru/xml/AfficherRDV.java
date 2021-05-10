@@ -65,17 +65,10 @@ public class AfficherRDV {
 				 LocalDateTime debut1 = LocalDateTime.parse(datedure, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 					
 					Complet = new RDV(debut1 ,vetodure, Client);
-					//System.out.println(Complet);
 					RendezVous.add(Complet);
 		        }
 			}
-						
-			
-		
-		
-		
 		return RendezVous;
-	  
 	}
 	
 	
