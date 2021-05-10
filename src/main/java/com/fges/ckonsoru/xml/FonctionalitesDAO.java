@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
+
+import com.fges.ckonsoru.metier.Client;
+import com.fges.ckonsoru.metier.RDV;
 
 public class FonctionalitesDAO {
 	Disponibilites dispo = new Disponibilites();
@@ -20,9 +24,11 @@ public class FonctionalitesDAO {
 		return dispo.getAllDidponibiliteDispo(dateRDV);
 	}
 	
-	public ArrayList<String> getAllRDV(String client) throws SAXException, IOException{
+	public ArrayList<RDV> getAllRDV(String client) throws SAXException, IOException, ParserConfigurationException{
 		
-		return affi.getAllRDVAfficher(client);
+		Client client1 = new Client(client);
+		
+		return affi.getAllRDVAfficher(client1);
 	}
 	
 	public void addRDV(String Veterinaire, String Date, String Client) throws SAXException, TransformerException {
@@ -37,9 +43,9 @@ public class FonctionalitesDAO {
 		return;
 	}
 	
-	public void AfficherList(ArrayList<String> ListeRdv){
+	public void AfficherListRDV(ArrayList<RDV> ListeRdv){
 		
-		affich.AfficherListeAffiche(ListeRdv);
+		affich.AfficherListeAfficherRDV(ListeRdv);
 		return;
 	}
 	

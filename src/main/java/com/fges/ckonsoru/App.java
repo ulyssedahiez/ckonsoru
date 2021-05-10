@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Properties;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import com.fges.ckonsoru.bdd.ConnexionBddDAO;
@@ -18,9 +19,9 @@ import org.xml.sax.SAXException;
 
 public class App {
 
-    public static void main(String args[]) throws ParseException, SAXException, IOException, TransformerException, SQLException{
+    public static void main(String args[]) throws ParseException, SAXException, IOException, TransformerException, SQLException, ParserConfigurationException{
       
-        /*System.out.println("Bienvenue sur Clinique Konsoru !");
+        System.out.println("Bienvenue sur Clinique Konsoru !");
         
         ConfigLoader cf = new ConfigLoader();
         Properties properties = cf.getProperties();
@@ -52,7 +53,7 @@ public class App {
             maGestion.doAction();
         }
        
-        */
+        /*
 
         Client cli = new Client("M. Byrnison");
         ConnexionBddDAO test = new ConnexionBddDAO();
